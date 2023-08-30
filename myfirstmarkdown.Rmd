@@ -1,0 +1,14 @@
+# Notebook
+
+This is my lede.
+
+```{r}
+library(tidyverse)
+```
+
+Here I'm attempting to load my data. Does it load? I don't know!
+
+```{r}
+
+```
+
