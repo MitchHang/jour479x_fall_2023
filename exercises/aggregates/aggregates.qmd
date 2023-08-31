@@ -1,7 +1,7 @@
 ---
 title: "Aggregates Exercises"
-author: "Derek Willis"
-date: "2023-08-15"
+author: "Mitchell Hang"
+date: "2023-08-31"
 output: html_document
 ---
 
@@ -82,7 +82,9 @@ The `read_csv` bits are pretty obvious, except for one thing. What happens in th
 ```{r}
 nbaplayers <- read_csv("data/nbaadvancedplayers2223.csv")
 ```
+
 **Answer** DESCRIBE THE RESULTS HERE
+We see a spreadsheet of players and their stats, such as their team, position, and age, as each player is sorted by rank.
 
 Now we can inspect the data we imported. What does it look like? To do that, we use `head(nbaplayers)` to show the headers and **the first six rows of data**. If we wanted to see them all, we could just simply enter `nbaplayers` and run it.
 
@@ -112,11 +114,13 @@ Here's the code. You should run it and then describe the output.
 nbaplayers %>%
   group_by(Pos) %>%
   summarise(
-    total = n()
+    total = n(),
+    minutes = sum(MP)
   )
 ```
 
 **Answer** DESCRIBE THE RESULTS HERE
+The positions in an NBA team are grouped by how many people there are. In this case, the position with the highest number of people appears to be SG (shooting guard).
 
 So let's walk through that. We start with our dataset -- `nbaplayers` -- and then we tell it to group the data by a given field in the data which we get by looking at either the output of `head` or you can look in the environment where you'll see `nbaplayers`.
 
@@ -133,6 +137,8 @@ nbaplayers %>%
 ```
 
 **Answer** NAME A COMPLICATING FACTOR CONTAINED IN THE RESULT & HOW YOU WOULD RESOLVE IT.
+
+It seems that there are some players that switched from one position to another (e.g., point guard to shooting guard), so I would try to re-write the data so that both roles (or at least the latter) of a player is accounted for when sorting the data.
 
 So the most common position in the NBA? Shooting guard, followed by center (although it's close between C and small forward).
 
