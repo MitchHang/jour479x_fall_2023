@@ -11,7 +11,7 @@ So first we'll import the tidyverse so we can read in our data and begin to work
 ```{r}
 #| warning: false
 #| message: false
-# load the tidyverse here
+library(tidyverse)
 ```
 
 Now you'll need a common and simple dataset of total attendance at NCAA football games over the last few seasons.
@@ -51,7 +51,7 @@ head(attendance)
 
 What's one thing you notice about the data that might make year-over-year comparisons more complex?
 
-**Answer** DESCRIBE IT HERE
+**Answer** The metrics of attendance are listed by their actual numbers, rather than their percent changes from the prior year, so we don't exactly know if there was an increase or decrease in attendance from one year to another. Also, some fields have N/A in them.
 
 The code to calculate percent change is pretty simple. Remember, with `summarize`, we used `n()` to count things. With `mutate`, we use very similar syntax to calculate a new value using other values in our dataset. So in this case, we're trying to do (new-old)/old, but we're doing it with fields. If we look at what we got when we did `head`, you'll see there's \`2022\` as the new data, and we'll use \`2021\` as the old data. So we're looking at one year. Then, to help us, we'll use arrange again to sort it, so we get the fastest growing school over one year.
 
@@ -77,7 +77,7 @@ attendance |> mutate(
 
 Who had the most growth in 2022 compared to the year before? What could account for that change? And what team(s) are the most interesting here?
 
-**Answer** YOUR ANSWER HERE
+**Answer** The institution that had the most MEASURABLE growth in 2022 compared to 2021 was Hawaii (MWC). I noticed that Hawaii's numbers for those two years were quite lower compared to 2019 and before, likely due to COVID-19 restrictions and fewer away teams showing up to play games. FIU (C-USA) had the largest growth of all institutions, but it is described as "infinite" since no one was in attendance for 2021 games, and in our math we would be dividing by zero.  San Diego St. (MWC) is the last institution with a percent change in the hundreds, as it returned to its pre-COVID attendance numbers in 2022. In contrast, the institution with the lowest MEASURABLE growth was Louisiana (Sun Belt). I remember that there was a hurricane in Louisiana in 2021, so I wonder if that had any effect on school activities during that time.
 
 ## Back to women's soccer
 
@@ -93,15 +93,15 @@ Previously we calculated totals for shots attempted and shots on goal for each t
 
 ```{r}
 matches_2023 |> 
-  group_by(REPLACE WITH GROUP_BY) |> 
+  group_by(team) |> 
   summarise(
-    total_on_goal = REPLACE WITH FORMULA,
-    total_goals = REPLACE WITH FORMULA
+    total_on_goal = sum(so_g),
+    total_goals = sum(goals)
   ) |> 
-  mutate(percent = REPLACE WITH FORMULA) |> 
+  mutate(percent = total_goals/total_on_goal*100) |> 
   arrange(desc(percent))
 ```
 
 What stands out to you here? Describe that below. Would you narrow down the results to certain teams based on the data? If so, do that in the code and explain why you did it below. Finally, what's the most interesting result to you that could be a story?
 
-**Answer** YOUR ANSWER HERE
+**Answer** So far, the biggest outlier seems to be the California Golden Bears, which has the highest goal percentage of 60%. Most of the percentages range from 3% to 46%, but I did see a few schools with a zero percentage: Alcorn Lady Braves, American Eagles, CSUN Matadors, Evansville Purple Aces, and George Mason Patriots. Alcorn has only two shots on goal, while the others have ten or more. A story I can potentially write is how good a team is depending on their goal percentage, as only one team has a percentage higher than 50%. I would probably have to examine the logic behind a shot on goal (i.e., see what goes into it) to better understand the sport and how points are scored.
