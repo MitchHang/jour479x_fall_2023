@@ -74,7 +74,7 @@ matches_2023 |>
 
 
 4. How many total corner kicks has Maryland had so far and how many have its opponents have? Calculate the difference between the two totals for every team.
-**ANSWER:** So far, Maryland has had 13 corner kicks. The team with the largest difference from Maryland is the Pittsburg Panthers, as they have 54 corner kicks with a difference of 41.
+**ANSWER:** So far, Maryland has had 13 corner kicks. The team with the largest difference from Maryland is the Pittsburgh Panthers, as they have 54 corner kicks with a difference of 41.
 
 ```{r}
 matches_2023 |>
@@ -86,3 +86,31 @@ matches_2023 |>
   arrange(desc(difference))
 ```
 
+## Significance Tests
+
+HYPOTHESIS: There is more scoring in women's soccer this season than last season.
+
+Add a column to both dataframes that contains the total_ _goals for each match. To do this, we'll use mutate and we will save the results back to the same dataframe.
+
+```{r}
+matches_2022 <- matches_2022 |> mutate(total_goals = goals + defensive_goals)
+
+matches_2023 <- matches_2023 |> mutate(total_goals = goals + defensive_goals)
+
+```
+
+```{r}
+t.test(matches_2022$total_goals, matches_2023$total_goals)
+```
+
+There is a very statistically significant difference between the total goals in 2023 compared to the total goals in 2022. However, I think this is likely because the 2023 season is still ongoing, and the total number of goals in the 2022 season has already been finalized, so I think it would be better if we compare the two seasons by their number of goals up to a certain date or number of games.
+
+```{r}
+matches_2022_early <- matches_2022 |> filter(date < '2022-09-14')
+```
+
+```{r}
+t.test(matches_2022_early$total_goals, matches_2023$total_goals)
+```
+
+There is some statistically significant difference between the total goals in 2023 compared to the total goals in the early matches of 2022. Based on this modified t-test, it's more fair to compare the total number of goals for a team between two seasons if we limit ourselves to the first few games by a certain date. That way, it gives us a better suggestion if one season had more total goals than the other.
