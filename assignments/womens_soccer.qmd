@@ -114,3 +114,62 @@ t.test(matches_2022_early$total_goals, matches_2023$total_goals)
 ```
 
 There is some statistically significant difference between the total goals in 2023 compared to the total goals in the early matches of 2022. Based on this modified t-test, it's more fair to compare the total number of goals for a team between two seasons if we limit ourselves to the first few games by a certain date. That way, it gives us a better suggestion if one season had more total goals than the other.
+
+## Correlations
+
+```{r}
+correlations <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensSoccerData/main/data/ncaa_womens_soccer_matchstats_2023.csv")
+```
+
+```{r}
+newcorrelations <- correlations |> 
+  mutate(
+    differential = goals - defensive_goals
+    )
+```
+
+```{r}
+newcorrelations |> summarise(correlation = cor(differential, fouls, method="pearson"))
+```
+
+```{r}
+newcorrelations |> 
+  summarise(correlation = cor(differential, yellow_cards, method="pearson"))
+```
+
+```{r}
+fit <- lm(differential ~ fouls, data = newcorrelations)
+summary(fit)
+```
+
+```{r}
+newcorrelations |> 
+  summarise(correlation = cor(differential, so_g, method="pearson"))
+```
+
+```{r}
+net <- lm(differential ~ so_g, data = newcorrelations)
+summary(net)
+```
+
+```{r}
+(0.445467*11)+-2.530441 
+```
+
+## My Model
+
+A potential story I could pitch is the idea that whether or not the combined number of red and yellow cards accumulated during a game is directly correlated to the possibility of a shutout. Looking at the data, we first find that there does appear to be a relationship between the two variables, but in a slight inverse of what we have initially expected (i.e., it is a small negative coefficient). Next, we find that such relationship between the two variables does most likely exist in real life and rarely happens by chance (i.e., the p-value is less than 0.01), meaning that there is some statistical significance. Therefore, we can conclude that the combined number of red and yellow cards is inversely correlated to the possibility of a shutout during a game.
+
+```{r}
+newcorrelations <- correlations |> 
+  mutate(
+    combined_cards = red_cards + yellow_cards
+    )
+
+newcorrelations |> summarise(correlation = cor(combined_cards, shutouts, method="pearson"))
+```
+
+```{r}
+net <- lm(combined_cards ~ shutouts, data = newcorrelations)
+summary(net)
+```
