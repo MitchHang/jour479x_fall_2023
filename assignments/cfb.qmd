@@ -16,3 +16,52 @@ First play problems: it appears that teams are inconsistent about how they defin
 ```{r}
 plays_2023 |> filter(drive_number == 1, play_number == 1, play_type != 'Kickoff') |> distinct(home, play_type)
 ```
+
+## College Football Regression Analysis
+
+```{r}
+logs <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs1122.csv")
+```
+
+```{r}
+logs <- logs |> mutate(
+  Differential = TeamScore - OpponentScore,
+  NetPenalties = Penalties - DefPenalties,
+  NetFumbles = Fumbles - DefFumbles,
+  NetInterceptions = Interceptions - DefInterceptions,
+  TurnoverMargin = TotalTurnovers - DefTotalTurnovers)
+```
+
+```{r}
+logs |> summarise(correlation = cor(Differential, Penalties, method="pearson"))
+```
+
+```{r}
+fit1 <- lm(Differential ~ Penalties, data = logs)
+summary(fit1)
+```
+Looking at our results, our p-value appears to be between 0.01 and 0.05, meaning that that the relationship between the point differential and the number of penalties has moderate statistical significance, so it is less random than we expected. We also see that our correlation coefficient says that the two variables are about 1.9% related towards the negative (more penalties, lower the differential), but when we look at the R-squared value being 0.0003066, it suggests that the number of penalties doesn't really explain the point differential as much. Therefore, this regression is not really that useful.
+
+```{r}
+fit2 <- lm(Differential ~ Penalties + NetPenalties + NetInterceptions + NetFumbles + TurnoverMargin, data = logs)
+summary(fit2)
+```
+For this section, I added the net number of penalties for both teams, the net interceptions, the net fumbles, and the turnover margin. I used these choices because penalties, interceptions and fumbles often lead to turnovers in football. This got me to a higher adjusted R-squared value of 0.2491, a lower p-value of less than 2.2e-16 and a residual standard error of less than 20, meaning that for this relationship, it is slightly more easier to explain the point differential and it occurs much less by chance. I think this suggests that the difference between points is dependent on not just the penalties, but other aspects that lead to a turnover in the game.
+
+```{r}
+filtered_logs <- logs |> filter(abs(Differential) <= 10)
+```
+
+```{r}
+fit3 <- lm(Differential ~ Penalties, data = filtered_logs)
+summary(fit3)
+```
+
+```{r}
+fit4 <- lm(Differential ~ Penalties + NetPenalties + NetInterceptions + NetFumbles + TurnoverMargin, data = filtered_logs)
+summary(fit4)
+```
+
+To me, I consider games in which the differential is an absolute value of 10 points or fewer to be "close" games. By filtering our logs with this criteria, we can see that the resulting simple or multiple regression models are not any better; they just look somewhat worse. Our simple regression model now has a lower adjusted R-squared value and a higher p-value, while our multiple regression model now just has a lower adjusted R-squared value. However, both models now have substantially lower residual standard errors, so I guess this means that there is less "variance" or room for error in this set due to the games being filtered, but also that it's possible that penalties do matter in games where the difference between points is larger than 10.
+
+In conclusion, I don't know if there is a possible story that can be made out of this, since it seems that penalties are not as much of a deciding factor in a game, regardless of the difference between points. It seems that the final difference between points can ultimately vary, whether or not penalties are involved, and this outcome is less decided by chance. However, I would try to use simple and multiple regressions in stories about a team's performance if they fared better or worse in one season than another.
