@@ -83,3 +83,57 @@ logs |>
      ) |> summarise(avg_score = mean(TeamScore), avg_opp = mean(OpponentScore))
 ```
 
+```{r}
+residualmodel <- logs |> mutate(differential = TeamScore - OpponentScore, FGPctMargin = TeamFGPCT - OpponentFGPCT)
+```
+
+```{r}
+fit <- lm(differential ~ FGPctMargin, data = residualmodel)
+summary(fit)
+```
+
+```{r}
+residualmodel <- residualmodel |> filter(!is.na(FGPctMargin))
+
+residualmodel <- residualmodel |> mutate(predicted = predict(fit), residuals = residuals(fit))
+
+residualmodel |> filter(Conference == 'Big Ten') |> arrange(desc(residuals)) |> select(Date, Team, Opponent, W_L, differential, FGPctMargin, predicted, residuals)
+```
+
+```{r}
+gamelogs <- read_csv("https://dwillis.github.io/sports-data-files/wbblogs23.csv")
+
+teamquality <- gamelogs |> 
+  select(Conference, Team, TeamFGPCT, TeamTotalRebounds, OpponentFGPCT, OpponentTotalRebounds)
+
+teamtotals <- teamquality |> 
+  group_by(Conference, Team) |> 
+  summarise(
+    FGAvg = mean(TeamFGPCT), 
+    ReboundAvg = mean(TeamTotalRebounds), 
+    OppFGAvg = mean(OpponentFGPCT),
+    OffRebAvg = mean(OpponentTotalRebounds)
+    ) 
+```
+```{r}
+teamzscore <- teamtotals |> 
+  mutate(
+    FGzscore = as.numeric(scale(FGAvg, center = TRUE, scale = TRUE)),
+    RebZscore = as.numeric(scale(ReboundAvg, center = TRUE, scale = TRUE)),
+    OppZscore = as.numeric(scale(OppFGAvg, center = TRUE, scale = TRUE)) * -1,
+    OppRebZScore = as.numeric(scale(OffRebAvg, center = TRUE, scale = TRUE)) * -1,
+    TotalZscore = FGzscore + RebZscore + OppZscore + OppRebZScore
+  )  
+
+head(teamzscore)
+```
+```{r}
+teamzscore |> arrange(desc(TotalZscore))
+```
+```{r}
+teamzscore |> 
+  filter(Conference == "Big Ten WBB") |> 
+  arrange(desc(TotalZscore)) |>
+  select(Team, TotalZscore)
+```
+
