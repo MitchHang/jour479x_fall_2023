@@ -1,1 +1,77 @@
+```{r}
+library(tidyverse)
+library(janitor)
+```
 
+```{r}
+volleyball_matches_2023 <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensVolleyballData/main/data/ncaa_womens_volleyball_matchstats_2023.csv")
+```
+
+```{r}
+glimpse(volleyball_matches_2023)
+```
+
+```{r}
+perset <- volleyball_matches_2023 |> 
+  mutate(
+    attacksperset = total_attacks/s,
+    assistsperset = assists/s,
+    blocksperset = (block_solos + block_assists)/s,
+    defattacksperset = defensive_total_attacks/s,
+    defassistsperset = defensive_assists/s,
+    defblocksperset = (defensive_block_solos + defensive_block_assists)/s
+  ) |>
+  select(date, team, opponent, attacksperset, assistsperset, blocksperset, defattacksperset, defassistsperset, defblocksperset)
+```
+
+```{r}
+teamzscore <- perset |>
+  group_by(date) |> 
+  mutate(
+    attackszscore = as.numeric(scale(attacksperset, center = TRUE, scale = TRUE)),
+    assistszscore = as.numeric(scale(assistsperset, center = TRUE, scale = TRUE)),
+    blockszscore = as.numeric(scale(blocksperset, center = TRUE, scale = TRUE)),
+    TotalZscore = attackszscore + assistszscore + blockszscore
+  ) |> ungroup() 
+
+opponentzscore <- perset |>
+  group_by(date) |> 
+  mutate(
+    defattackszscore = as.numeric(scale(defattacksperset, center = TRUE, scale = TRUE)),
+    defassistszscore = as.numeric(scale(defassistsperset, center = TRUE, scale = TRUE)),
+    defblockszscore = as.numeric(scale(defblocksperset, center = TRUE, scale = TRUE)),
+    TotaldefZscore = defattackszscore + defassistszscore + defblockszscore
+  ) |> ungroup() 
+```
+
+```{r}
+teamzscore_selected <- teamzscore |> 
+  select(team, TotalZscore)
+
+write_csv(teamzscore_selected, "C:/Users/Mitchell Hang/Documents/GitHub/jour479x_fall_2023/assignments/teamzscore_selected.csv")
+```
+
+```{r}
+opponentzscore_selected <- opponentzscore |> 
+  select(opponent, TotaldefZscore) |>
+  arrange(opponent)
+
+write_csv(opponentzscore_selected, "C:/Users/Mitchell Hang/Documents/GitHub/jour479x_fall_2023/assignments/opponentzscore_selected.csv")
+```
+
+```{r}
+teamzscore_grouped <- read_csv("C:/Users/Mitchell Hang/Documents/GitHub/jour479x_fall_2023/assignments/teamzscore_grouped.csv")
+
+opponentzscore_grouped <- read_csv("C:/Users/Mitchell Hang/Documents/GitHub/jour479x_fall_2023/assignments/opponentzscore_grouped.csv")
+```
+```{r}
+teamzscore_grouped |> 
+  arrange(desc(TotalZscore))
+```
+```{r}
+opponentzscore_grouped |> 
+  arrange(desc(TotaldefZscore))
+```
+I took the time to calculate the separate Z-scores for the teams that played on both offense and defense (i.e., listed as the main team vs. opponent). Both databases had the Tulsa Golden Hurricane as the team with the highest Z-scores, with SFA Ladyjacks and UNI Panthers coming right behind. However, both spreadsheets differ in the fact that not every team that played in defense was present in offense. Maryland had an offense Z-score of 10.403 (86th out of 333 teams) and a defense Z-score of 7.263 (113 out of 359 teams). Maryland's offense is better than LMU (CA) Lions but worse than the Ohio Bobcats. Maryland's defense is better than the Illinois Fighting Illini  but worse than the Wofford Terriers. Therefore, I would say that Maryland's attacks, assists, and blocks in their games are average at best, perhaps slightly higher than the split the highest and lowest-scoring teams. 
+
+I was honestly having trouble with this assignment as RStudio wasn't cooperating with me (or maybe I had forgotten something) and had to export the CSVs and consolidate the rows in Excel, then read the edited CSVs back in RStudio but couldn't figure out how to properly merge everything quickly as the opponent database had shorter team names and more teams than the main team database. I don't know how accurate my findings are, but I feel that no story needs to be made here unless Maryland has a considerably high or low Z-score, whether playing on offense or defense.
