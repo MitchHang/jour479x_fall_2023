@@ -1,6 +1,5 @@
 ```{r}
 library(tidyverse)
-library(janitor)
 ```
 
 ```{r}
@@ -13,65 +12,48 @@ glimpse(volleyball_matches_2023)
 
 ```{r}
 perset <- volleyball_matches_2023 |> 
-  mutate(
-    attacksperset = total_attacks/s,
-    assistsperset = assists/s,
-    blocksperset = (block_solos + block_assists)/s,
-    defattacksperset = defensive_total_attacks/s,
-    defassistsperset = defensive_assists/s,
-    defblocksperset = (defensive_block_solos + defensive_block_assists)/s
-  ) |>
-  select(date, team, opponent, attacksperset, assistsperset, blocksperset, defattacksperset, defassistsperset, defblocksperset)
+  select(date, team, opponent, total_attacks, assists, block_solos, block_assists, defensive_total_attacks, defensive_assists, defensive_block_solos, defensive_block_assists)
 ```
 
 ```{r}
-teamzscore <- perset |>
-  group_by(date) |> 
-  mutate(
-    attackszscore = as.numeric(scale(attacksperset, center = TRUE, scale = TRUE)),
-    assistszscore = as.numeric(scale(assistsperset, center = TRUE, scale = TRUE)),
-    blockszscore = as.numeric(scale(blocksperset, center = TRUE, scale = TRUE)),
-    TotalZscore = attackszscore + assistszscore + blockszscore
-  ) |> ungroup() 
+teamtotals <- perset |>
+  group_by(team) |> 
+   summarise(
+    AttacksAvg = mean(total_attacks), 
+    AssistsAvg = mean(assists), 
+    BlocksAvg = mean(block_solos + block_assists),
+    DefAttacksAvg = mean(defensive_total_attacks), 
+    DefAssistsAvg = mean(defensive_assists), 
+    DefBlocksAvg = mean(defensive_block_solos + defensive_block_assists)
+    ) 
 
-opponentzscore <- perset |>
-  group_by(date) |> 
+teamzscore <- teamtotals |> 
   mutate(
-    defattackszscore = as.numeric(scale(defattacksperset, center = TRUE, scale = TRUE)),
-    defassistszscore = as.numeric(scale(defassistsperset, center = TRUE, scale = TRUE)),
-    defblockszscore = as.numeric(scale(defblocksperset, center = TRUE, scale = TRUE)),
-    TotaldefZscore = defattackszscore + defassistszscore + defblockszscore
-  ) |> ungroup() 
+    AttacksZscore = as.numeric(scale(AttacksAvg, center = TRUE, scale = TRUE)),
+    AssistsZscore = as.numeric(scale(AssistsAvg, center = TRUE, scale = TRUE)),
+    BlocksZscore = as.numeric(scale(BlocksAvg, center = TRUE, scale = TRUE)),
+    DefAttacksZscore = as.numeric(scale(DefAttacksAvg, center = TRUE, scale = TRUE)) * -1,
+    DefAssistsZScore = as.numeric(scale(DefAssistsAvg, center = TRUE, scale = TRUE)) * -1,
+    DefBlocksZScore = as.numeric(scale(DefBlocksAvg, center = TRUE, scale = TRUE)) * -1,
+    TotalZscore = AttacksZscore + AssistsZscore + BlocksZscore + DefAttacksZscore + DefAssistsZScore + DefBlocksZScore
+  )  
 ```
 
 ```{r}
-teamzscore_selected <- teamzscore |> 
+head(teamzscore)
+```
+```{r}
+teamzscore |> 
+  arrange(desc(TotalZscore)) |>
   select(team, TotalZscore)
-
-write_csv(teamzscore_selected, "C:/Users/Mitchell Hang/Documents/GitHub/jour479x_fall_2023/assignments/teamzscore_selected.csv")
 ```
 
-```{r}
-opponentzscore_selected <- opponentzscore |> 
-  select(opponent, TotaldefZscore) |>
-  arrange(opponent)
+The Oregon Ducks are currently the top performing college volleyball team based on their attacks, assists and blocks achieved during game play.
 
-write_csv(opponentzscore_selected, "C:/Users/Mitchell Hang/Documents/GitHub/jour479x_fall_2023/assignments/opponentzscore_selected.csv")
-```
+The results were determined from a database of college volleyball matches for the Fall 2023 season. Compared to other teams, the Ducks have an average of 116.154 attacks during matches, putting them among the top 80% of teams based on their average number of attacks. The Ducks also have an average of 47.077 in during matches, putting them among the top 30 teams. Finally, they have an average of exactly 19 blocks (combine solo and assists), putting them among the top 10 teams based off this measurement alone.
 
-```{r}
-teamzscore_grouped <- read_csv("C:/Users/Mitchell Hang/Documents/GitHub/jour479x_fall_2023/assignments/teamzscore_grouped.csv")
+As of September 24th (after 13 games), the Ducks have a win-loss ratio of 12:1. Other teams that performed as well as the Ducks are the Stanford Cardinal, the Arizona St. Sun Devils, and the Towson Tigers. The team currently performing the worse are the Le Moyne Dolphins, as all of their (currently) 12 games are losses. Other teams that performed as worse as the Dolphins are the Alcorn Lady Braves, the Manhattan Jaspers, and the Southern Utah Thunderbirds.
 
-opponentzscore_grouped <- read_csv("C:/Users/Mitchell Hang/Documents/GitHub/jour479x_fall_2023/assignments/opponentzscore_grouped.csv")
-```
-```{r}
-teamzscore_grouped |> 
-  arrange(desc(TotalZscore))
-```
-```{r}
-opponentzscore_grouped |> 
-  arrange(desc(TotaldefZscore))
-```
-I took the time to calculate the separate Z-scores for the teams that played on both offense and defense (i.e., listed as the main team vs. opponent). Both databases had the Tulsa Golden Hurricane as the team with the highest Z-scores, with SFA Ladyjacks and UNI Panthers coming right behind. However, both spreadsheets differ in the fact that not every team that played in defense was present in offense. Maryland had an offense Z-score of 10.403 (86th out of 333 teams) and a defense Z-score of 7.263 (113 out of 359 teams). Maryland's offense is better than LMU (CA) Lions but worse than the Ohio Bobcats. Maryland's defense is better than the Illinois Fighting Illini  but worse than the Wofford Terriers. Therefore, I would say that Maryland's attacks, assists, and blocks in their games are average at best, perhaps slightly higher than the split the highest and lowest-scoring teams. 
+Perhaps one reason why the Oregon Ducks are performing well in volleyball is because they are based in Eugene, which is known by many as "Track Town, USA" because of the university's successful football and track & field programs. In addition, the renowned athletic footwear and apparel company Nike being founded by alumni Phil Knight and Bill Bowerman. According to the University of Oregon's website, their annual operating budget is more than \$1.1 billion, with a considerable portion of it covering auxiliary operations, such as athletics. The university also mentions that their athletics department is self-sufficient, meaning it receives no tuition or state operating funds, as the department paid around \$15 million for both administrative overhead and student-athlete scholarships.
 
-I was honestly having trouble with this assignment as RStudio wasn't cooperating with me (or maybe I had forgotten something) and had to export the CSVs and consolidate the rows in Excel, then read the edited CSVs back in RStudio but couldn't figure out how to properly merge everything quickly as the opponent database had shorter team names and more teams than the main team database. I don't know how accurate my findings are, but I feel that no story needs to be made here unless Maryland has a considerably high or low Z-score, whether playing on offense or defense.
+https://www.uoregon.edu/accountability/transparency/faq
