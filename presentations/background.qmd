@@ -1,0 +1,19 @@
+The question that I have proposed for this project is...
+
+"Who is considered to be the top tennis player in 2022, based on their appearances and rankings in any of the four Grand Slams (Australian Open, French Open, Wimbledon, U.S. Open) as well as other competitive ATP/WTA tournaments, based on cumulative points/sets/matches won?"
+
+I decided to go for this question because many people have considered who the greatest tennis player currently is, but few have taken the time to calculate such findings based on overall performance metrics. I feel that it's better that we answer this question based on objectively compiling and analyzing competition results rather than subjective opinions and thinking, because people will get an idea of how one player performs compared to another.
+
+In order to tackle this question, I would have to search for tennis databases on the web. The data in question can be found on multiple sites, particularly those hosted by the Association of Tennis Professionals (ATP) and the Women's Tennis Association (WTA), as well as other secondary sites such as ultimatetennisstatistics.com, tennisexplorer.com, and tennisabstract.com. For instance, the latter site is very helpful because it gives me the opportunity to filter the database based on the kind of court played (grass, clay, hard), the specific match/tournament, and their age. However, the database seems to include only the top 50 players per category, so I would consider finding a database that compiles as many registered players that competed in tournaments throughout 2022. I would also sub-sort/filter the data by country, age (group) and tournament(s) they competed in in case I would have to find any sub-totals. 
+
+For simplification purposes, I am focusing solely on tennis players who competed in 2022. The fourth Grand Slam (U.S. Open) is already over for this year (2023), but I would rather stick to 2022 because there are some other competitions in-progress that other players are competing in, and we currently don't know of the results yet.
+
+```{r}
+library(tidyverse)
+```
+
+Database found here: https://github.com/JeffSackmann/tennis_atp/blob/master/atp_matches_2022.csv
+
+```{r}
+atp_matches_2022 <- read_csv("https://raw.githubusercontent.com/JeffSackmann/tennis_atp/master/atp_matches_2022.csv")
+```
