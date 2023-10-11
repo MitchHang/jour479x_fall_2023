@@ -65,3 +65,85 @@ summary(fit4)
 To me, I consider games in which the differential is an absolute value of 10 points or fewer to be "close" games. By filtering our logs with this criteria, we can see that the resulting simple or multiple regression models are not any better; they just look somewhat worse. Our simple regression model now has a lower adjusted R-squared value and a higher p-value, while our multiple regression model now just has a lower adjusted R-squared value. However, both models now have substantially lower residual standard errors, so I guess this means that there is less "variance" or room for error in this set due to the games being filtered, but also that it's possible that penalties do matter in games where the difference between points is larger than 10.
 
 In conclusion, I don't know if there is a possible story that can be made out of this, since it seems that penalties are not as much of a deciding factor in a game, regardless of the difference between points. It seems that the final difference between points can ultimately vary, whether or not penalties are involved, and this outcome is less decided by chance. However, I would try to use simple and multiple regressions in stories about a team's performance if they fared better or worse in one season than another.
+
+```{r}
+install.packages("waffle")
+library(waffle)
+```
+```{r}
+md <- c("Rushing"=175, "Passing"=314)
+ms <- c("Rushing"=100, "Passing"=221)
+
+waffle(
+        md, 
+        rows = 10, 
+        title="Maryland's offense", 
+        xlab="1 square = 1 yard", 
+        colors = c("black", "red")
+)
+```
+```{r}
+passing <- c("Maryland"=314, "Michigan State"=221)
+
+waffle(
+        passing, 
+        rows = 10, 
+        title="Maryland vs Michigan State: passing", 
+        xlab="1 square = 1 yard", 
+        colors = c("red", "green")
+)
+```
+
+```{r}
+iron(
+ waffle(md, 
+        rows = 10, 
+        title="Maryland's offense", 
+        xlab="1 square = 1 yard", 
+        colors = c("black", "red")
+        ),
+ waffle(ms, 
+        rows = 10, 
+        title="Michigan State's offense", 
+        xlab="1 square = 1 yard", 
+        colors = c("black", "green")
+        )
+)
+```
+
+```{r}
+md <- c("Rushing"=175, "Passing"=314)
+ms <- c("Rushing"=100, "Passing"=221, 168)
+
+iron(
+ waffle(md, 
+        rows = 10, 
+        title="Maryland's offense", 
+        xlab="1 square = 1 yard", 
+        colors = c("black", "red")
+        ),
+ waffle(ms, 
+        rows = 10, 
+        title="Michigan State's offense", 
+        xlab="1 square = 1 yard",
+        colors = c("black", "green", "white")
+        )
+)
+```
+```{r}
+iron(
+ waffle(md/2, 
+        rows = 10, 
+        title="Maryland's offense", 
+        xlab="1 square = 1 yard", 
+        colors = c("black", "red")
+        ),
+ waffle(ms/2, 
+        rows = 10, 
+        title="Michigan State's offense", 
+        xlab="1 square = 1 yard",
+        colors = c("black", "green", "white")
+        )
+)
+```
+
