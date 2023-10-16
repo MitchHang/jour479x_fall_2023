@@ -19,10 +19,153 @@ For simplification purposes, I am focusing solely on tennis players who competed
 
 ```{r}
 library(tidyverse)
+library(lubridate)
+library(scales)
 ```
 
-Database found here: https://github.com/JeffSackmann/tennis_atp/blob/master/atp_matches_2022.csv
+Database found here (2023 data is up to September 11, 2023 as of writing this): 
+https://github.com/JeffSackmann/tennis_atp/blob/master/atp_matches_2022.csv
+https://github.com/JeffSackmann/tennis_atp/blob/master/atp_matches_2023.csv
+https://github.com/JeffSackmann/tennis_wta/blob/master/wta_matches_2022.csv
+https://github.com/JeffSackmann/tennis_wta/blob/master/wta_matches_2023.csv
 
 ```{r}
 atp_matches_2022 <- read_csv("https://raw.githubusercontent.com/JeffSackmann/tennis_atp/master/atp_matches_2022.csv")
+
+atp_matches_2023 <- read_csv("https://raw.githubusercontent.com/JeffSackmann/tennis_atp/master/atp_matches_2023.csv")
+
+wta_matches_2022 <- read_csv("https://raw.githubusercontent.com/JeffSackmann/tennis_wta/master/wta_matches_2022.csv")
+
+wta_matches_2023 <- read_csv("https://raw.githubusercontent.com/JeffSackmann/tennis_wta/master/wta_matches_2023.csv")
 ```
+
+```{r}
+atp_matches_2022_new <- atp_matches_2022 |>
+  mutate(tourney_date = ymd(tourney_date))
+
+atp_matches_2023_new <- atp_matches_2023 |>
+  mutate(tourney_date = ymd(tourney_date))
+
+wta_matches_2022_new <- wta_matches_2022 |>
+  mutate(tourney_date = ymd(tourney_date))
+
+wta_matches_2023_new <- wta_matches_2023 |>
+  mutate(tourney_date = ymd(tourney_date))
+
+grandslams <- c("Wimbledon", "Us Open", "Roland Garros", "Australian Open")
+```
+
+Top 20 Male Tennis Players across the Four Grand Slams in 2022 (based on total matches won)
+```{r}
+atp_matches_2022_new_gs <- atp_matches_2022_new |>
+  filter(tourney_name %in% grandslams) |>
+  select(winner_name) |>
+  group_by(winner_name) |>
+  summarise(matches_won = n()) |>
+  arrange(desc(matches_won)) |>
+  head(20)
+
+atp_matches_2022_new_gs
+```
+```{r}
+ggplot() + 
+  geom_bar(
+    data=atp_matches_2022_new_gs, 
+    aes(x=reorder(winner_name, matches_won),
+        weight=matches_won)) + 
+  scale_y_continuous(labels=comma) + 
+  labs(
+    title="Rafael Nadal won the most men's Grand Slam matches for 2022", 
+    x="Player", 
+    y="Matches won") + 
+  theme_minimal() + 
+  coord_flip()
+```
+
+Top 20 Male Tennis Players across the Four Grand Slams in 2023 (based on total matches won)
+```{r}
+atp_matches_2023_new_gs <- atp_matches_2023_new |>
+  filter(tourney_name %in% grandslams) |>
+  select(winner_name) |>
+  group_by(winner_name) |>
+  summarise(matches_won = n()) |>
+  arrange(desc(matches_won)) |>
+  head(20)
+
+atp_matches_2023_new_gs
+```
+```{r}
+ggplot() + 
+  geom_bar(
+    data=atp_matches_2023_new_gs, 
+    aes(x=reorder(winner_name, matches_won),
+        weight=matches_won)) + 
+  scale_y_continuous(labels=comma) + 
+  labs(
+    title="Novak Djokovic won the most  men's Grand Slam matches for 2023", 
+    x="Player", 
+    y="Matches won") + 
+  theme_minimal() + 
+  coord_flip()
+```
+
+Top 20 Female Tennis Players across the Four Grand Slams in 2022 (based on total matches won)
+```{r}
+wta_matches_2022_new_gs <- wta_matches_2022_new |>
+  filter(tourney_name %in% grandslams) |>
+  select(winner_name) |>
+  group_by(winner_name) |>
+  summarise(matches_won = n()) |>
+  arrange(desc(matches_won)) |>
+  head(20)
+
+wta_matches_2022_new_gs
+```
+```{r}
+ggplot() + 
+  geom_bar(
+    data=wta_matches_2022_new_gs, 
+    aes(x=reorder(winner_name, matches_won),
+        weight=matches_won)) + 
+  scale_y_continuous(labels=comma) + 
+  labs(
+    title="Iga Swiatek won the most women's Grand Slam matches for 2022", 
+    x="Player", 
+    y="Matches won") + 
+  theme_minimal() + 
+  coord_flip()
+```
+
+Top 20 Female Tennis Players across the Four Grand Slams in 2023 (based on total matches won)
+```{r}
+wta_matches_2023_new_gs <- wta_matches_2023_new |>
+  filter(tourney_name %in% grandslams) |>
+  select(winner_name) |>
+  group_by(winner_name) |>
+  summarise(matches_won = n()) |>
+  arrange(desc(matches_won)) |>
+  head(20)
+
+wta_matches_2023_new_gs
+```
+
+```{r}
+ggplot() + 
+  geom_bar(
+    data=wta_matches_2023_new_gs, 
+    aes(x=reorder(winner_name, matches_won),
+        weight=matches_won)) + 
+  scale_y_continuous(labels=comma) + 
+  labs(
+    title="Aryna Sabalenka won the most women's Grand Slam matches for 2023", 
+    x="Player", 
+    y="Matches won") + 
+  theme_minimal() + 
+  coord_flip()
+```
+
+So far from my initial explorations in the datasets (I added two more for the WTA from 2022 and 2023), I was able to construct analyses (both tibbles and bar graphs) for the top 20 male and female players (because 10 was too small) across the four Grand Slams in both 2022 and 2023, based on the amount of matches they won. Rafael Nadal and Iga Swiatek won the most Grand Slam matches in 2022, wheras Novak Djokovic and Aryna Sabalenka won the most Grand Slam matches in 2023. Interestingly enough, those four players have won more than 20 Grand Slam matches whereas many other players have won fewer than 20. It'll be interesting to compare all of the players in 2022 and 2023 by selecting all of the matches outside of the Grand Slams to see if anyone remains on top or if we see a sudden rise or fall in the rankings.
+
+I noticed that both Novak Djokovic and Aryna Sabalenka made surprising jumps in the ranking from 2022 to 2023, and I was surprised to see Rafael Nadal in the Top 20 male ranking for 2023, while checking the dataset reveals that he only won one Grand Slam match (and further research revealed that he had suffered an injury at the Australian Open and subsequently did not appear in the subsequent Grand Slams), so I was really surprised to see Rafael Nadal have what is considerably the largest drop in number of Grand Slam matches won from 2022 and 2023. 
+
+Upon closer inspection of these datasets, they list a timeline of the matches which have occurred and other statistics for both players such as their aces, total serve points, and break points saved/faced. Since I currently don't know how to efficiently tally up without any errors, I feel that it's much easier on matches won rather than sets or points. Alternatively, I can make a line chart out of the "winner rank" column showing a player's progression over time, and I might take the top 20 (or maybe 10 since 20 might be too many) players and give them lines of different colors while I put the rest of the players in grey (sorta like how I did with Lesson #15).

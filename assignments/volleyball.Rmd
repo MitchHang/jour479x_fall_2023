@@ -57,3 +57,14 @@ As of September 24th (after 13 games), the Ducks have a win-loss ratio of 12:1. 
 Perhaps one reason why the Oregon Ducks are performing well in volleyball is because they are based in Eugene, which is known by many as "Track Town, USA" because of the university's successful football and track & field programs. In addition, the renowned athletic footwear and apparel company Nike being founded by alumni Phil Knight and Bill Bowerman. According to the University of Oregon's website, their annual operating budget is more than \$1.1 billion, with a considerable portion of it covering auxiliary operations, such as athletics. The university also mentions that their athletics department is self-sufficient, meaning it receives no tuition or state operating funds, as the department paid around \$15 million for both administrative overhead and student-athlete scholarships.
 
 https://www.uoregon.edu/accountability/transparency/faq
+
+```{r}
+rosters <- read_csv("https://raw.githubusercontent.com/Sports-Roster-Data/womens-volleyball/main/vb_rosters_2023_24.csv")
+```
+```{r}
+rosters_with_towns <- rosters |>
+  mutate(HometownCopy = Hometown) |>
+  separate(Hometown, c('Town', 'State'), sep=',') |>
+  separate(Height, c('Feet', 'Inches'), sep=' ')
+```
+
