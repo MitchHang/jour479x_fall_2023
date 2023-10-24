@@ -102,7 +102,7 @@ ggplot() +
         weight=matches_won)) + 
   scale_y_continuous(labels=comma) + 
   labs(
-    title="Novak Djokovic won the most  men's Grand Slam matches for 2023", 
+    title="Novak Djokovic won the most men's Grand Slam matches for 2023", 
     x="Player", 
     y="Matches won") + 
   theme_minimal() + 
@@ -173,3 +173,106 @@ Upon closer inspection of these datasets, they list a timeline of the matches wh
 # Update for 10/22/23
 
 For this project, I am also considering creating a line graph showing the current rankings for the players throughout the 2022 calendar year. The challenging part would have to be adding enough padding space for the graph and also re-orienting the numbers so that the #1 goes on the top and anything lower than that goes toward the bottom.
+
+```{r}
+atp_matches_2022_new_months <- atp_matches_2022_new |>
+  filter(winner_name == "Rafael Nadal") |>
+  mutate(month = month(tourney_date, label=TRUE)) |>
+  select(month) |>
+  group_by(month) |>
+  summarise(matches_won = n()) |>
+  arrange(desc(matches_won))
+
+atp_matches_2022_new_months
+```
+
+```{r}
+ggplot() + 
+  geom_bar(
+    data=atp_matches_2022_new_months, 
+    aes(x=month, weight=matches_won)) + 
+  scale_y_continuous(labels=comma) + 
+  labs(
+    title="Rafael Nadal wins most matches in 2022 during Australian Open", 
+    x="Month", 
+    y="# of Matches Won") + 
+  theme_light()
+```
+
+
+```{r}
+atp_matches_2023_new_months <- atp_matches_2023_new |>
+  filter(winner_name == "Novak Djokovic") |>
+  mutate(month = month(tourney_date, label=TRUE)) |>
+  select(month) |>
+  group_by(month) |>
+  summarise(matches_won = n()) |>
+  arrange(desc(matches_won))
+
+atp_matches_2023_new_months
+```
+
+```{r}
+ggplot() + 
+  geom_bar(
+    data=atp_matches_2023_new_months, 
+    aes(x=month, weight=matches_won)) + 
+  scale_y_continuous(labels=comma) + 
+  labs(
+    title="Novak Djokovic wins most matches in 2022 during Australian Open and U.S. Open", 
+    x="Month", 
+    y="# of Matches Won") + 
+  theme_light()
+```
+
+
+```{r}
+wta_matches_2022_new_months <- wta_matches_2022_new |>
+  filter(winner_name == "Iga Swiatek") |>
+  mutate(month = month(tourney_date, label=TRUE)) |>
+  select(month) |>
+  group_by(month) |>
+  summarise(matches_won = n()) |>
+  arrange(desc(matches_won))
+
+wta_matches_2022_new_months
+```
+```{r}
+ggplot() + 
+  geom_bar(
+    data=wta_matches_2022_new_months, 
+    aes(x=month, weight=matches_won)) + 
+  scale_y_continuous(labels=comma) + 
+  labs(
+    title="Iga Swiatek wins most matches in 2022 during French Open, BNP Paribas & Miami", 
+    x="Month", 
+    y="# of Matches Won") + 
+  theme_light()
+```
+
+```{r}
+wta_matches_2023_new_months <- wta_matches_2023_new |>
+  filter(winner_name == "Aryna Sabalenka") |>
+  mutate(month = month(tourney_date, label=TRUE)) |>
+  select(month) |>
+  group_by(month) |>
+  summarise(matches_won = n()) |>
+  arrange(desc(matches_won))
+
+wta_matches_2023_new_months
+```
+
+```{r}
+ggplot() + 
+  geom_bar(
+    data=atp_matches_2023_new_months, 
+    aes(x=month, weight=matches_won)) + 
+  scale_y_continuous(labels=comma) + 
+  labs(
+    title="Aryna Sabalenka wins most matches in 2023 during Australian Open", 
+    x="Month", 
+    y="# of Matches Won") + 
+  theme_light()
+```
+
+Taking the four names of the top players of the ATP and WTA in 2022 and 2023 in mind, I decided to see their distribution of match wins throughout the year in which they were dominant. Rafael Nadal, Novak Djokovic, and Aryna Sabalenka won their highest number of matches in January (plus August for Novak Djokovic), suggesting that most of these matches would have occured within the timeframe of the Australian Open (and also the U.S. Open for Novak Djokovic). Interestingly, Iga Swiatek had the highest number of matches won in March and May of 2022. We can consider that most of these matches take place in the French Open in May, and looking at the dataset it seems there were two other WTA tournaments in March that she participated in: the BNP Paribas Open in Indian Wells and Miami Open.
