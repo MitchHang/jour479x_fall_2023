@@ -21,6 +21,7 @@ For simplification purposes, I am focusing solely on tennis players who competed
 library(tidyverse)
 library(lubridate)
 library(scales)
+library(ggalt)
 ```
 
 Database found here (2023 data is up to September 11, 2023 as of writing this): 
@@ -59,7 +60,6 @@ Top 20 Male Tennis Players across the Four Grand Slams in 2022 (based on total m
 ```{r}
 atp_matches_2022_new_gs <- atp_matches_2022_new |>
   filter(tourney_name %in% grandslams) |>
-  select(winner_name) |>
   group_by(winner_name) |>
   summarise(matches_won = n()) |>
   arrange(desc(matches_won)) |>
@@ -86,7 +86,6 @@ Top 20 Male Tennis Players across the Four Grand Slams in 2023 (based on total m
 ```{r}
 atp_matches_2023_new_gs <- atp_matches_2023_new |>
   filter(tourney_name %in% grandslams) |>
-  select(winner_name) |>
   group_by(winner_name) |>
   summarise(matches_won = n()) |>
   arrange(desc(matches_won)) |>
@@ -113,7 +112,6 @@ Top 20 Female Tennis Players across the Four Grand Slams in 2022 (based on total
 ```{r}
 wta_matches_2022_new_gs <- wta_matches_2022_new |>
   filter(tourney_name %in% grandslams) |>
-  select(winner_name) |>
   group_by(winner_name) |>
   summarise(matches_won = n()) |>
   arrange(desc(matches_won)) |>
@@ -140,7 +138,6 @@ Top 20 Female Tennis Players across the Four Grand Slams in 2023 (based on total
 ```{r}
 wta_matches_2023_new_gs <- wta_matches_2023_new |>
   filter(tourney_name %in% grandslams) |>
-  select(winner_name) |>
   group_by(winner_name) |>
   summarise(matches_won = n()) |>
   arrange(desc(matches_won)) |>
@@ -170,109 +167,157 @@ I noticed that both Novak Djokovic and Aryna Sabalenka made surprising jumps in 
 
 Upon closer inspection of these datasets, they list a timeline of the matches which have occurred and other statistics for both players such as their aces, total serve points, and break points saved/faced. Since I currently don't know how to efficiently tally up without any errors, I feel that it's much easier on matches won rather than sets or points. Alternatively, I can make a line chart out of the "winner rank" column showing a player's progression over time, and I might take the top 20 (or maybe 10 since 20 might be too many) players and give them lines of different colors while I put the rest of the players in grey (sorta like how I did with Lesson #15).
 
-# Update for 10/22/23
+-----
 
-For this project, I am also considering creating a line graph showing the current rankings for the players throughout the 2022 calendar year. The challenging part would have to be adding enough padding space for the graph and also re-orienting the numbers so that the #1 goes on the top and anything lower than that goes toward the bottom.
+Here I am creating a cluster based on the top 20 male and female winners of the Grand Slams for 2022 and 2023.
 
 ```{r}
-atp_matches_2022_new_months <- atp_matches_2022_new |>
-  filter(winner_name == "Rafael Nadal") |>
-  mutate(month = month(tourney_date, label=TRUE)) |>
-  select(month) |>
-  group_by(month) |>
-  summarise(matches_won = n()) |>
-  arrange(desc(matches_won))
+male_winners_2022 <- c("Rafael Nadal", "Carlos Alcaraz", "Jannik Sinner", "Casper Ruud", "Daniil Medvedev", "Marin Cilic", "Nick Kyrgios", "Novak Djokovic", "Andrey Rublev", "Cameron Norrie", "Frances Tiafoe", "Karen Khachanov", "Stefanos Tsitsipas", "Cristian Garin", "Matteo Berrettini", "Alex De Minaur", "Alexander Zverev", "Botic Van De Zandschulp", "Felix Auger Aliassime", "Miomir Kecmanovic")
 
-atp_matches_2022_new_months
+male_winners_2023 <- c("Novak Djokovic","Carlos Alcaraz","Andrey Rublev","Stefanos Tsitsipas","Daniil Medvedev", "Alexander Zverev", "Jannik Sinner", "Holger Rune", "Tommy Paul", "Ben Shelton", "Frances Tiafoe", "Grigor Dimitrov", "Casper Ruud", "Hubert Hurkacz", "Karen Khachanov", "Alex De Minaur", "Jiri Lehecka", "Nicolas Jarry", "Taylor Fritz", "Alejandro Davidovich Fokina")
+  
+female_winners_2022 <- c("Iga Swiatek", "Jessica Pegula", "Cori Gauff", "Ons Jabeur", "Alize Cornet", "Amanda Anisimova", "Aryna Sabalenka", "Danielle Collins", "Elena Rybakina", "Madison Keys", "Ajla Tomljanovic", "Caroline Garcia", "Elise Mertens", "Paula Badosa", "Simona Halep", "Veronika Kudermetova", "Qinwen Zheng", "Victoria Azarenka", "Alison Riske Amritraj", "Ashleigh Barty")
+
+female_winners_2023 <- c("Aryna Sabalenka", "Iga Swiatek", "Cori Gauff", "Elena Rybakina", "Marketa Vondrousova", "Ons Jabeur", "Jessica Pegula", "Karolina Muchova", "Madison Keys", "Elina Svitolina", "Jelena Ostapenko", "Beatriz Haddad Maia", "Belinda Bencic", "Ekaterina Alexandrova", "Victoria Azarenka", "Daria Kasatkina", "Elise Mertens", "Magda Linette", "Bernarda Pera", "Donna Vekic")
 ```
 
+Here I am creating a dumbbell chart showing the overall match wins and losses for the Top 20 male Grand Slam winners in 2022. Rafael Nadal, the top Grand Slam winner in 2022, is surprisingly not ranked at the top of the chart but somewhere towards the middle, as the number of wins and losses (as well as the difference between the two) comes close to the 2023 Grand Slam winner, Novak Djokovic. I was quite surprised to see Cristain Garin as being the only player who has had more match losses than wins in 2022, and he also had the least number of match wins that year. 
+
 ```{r}
+atp_matches_2022_new_top20_win <- atp_matches_2022_new |>
+  filter(winner_name %in% male_winners_2022) |>
+  group_by(winner_name) |>
+  rename(name = winner_name) |>
+  summarise(matches_won = n())
+
+atp_matches_2022_new_top20_lose <- atp_matches_2022_new |>
+  filter(loser_name %in% male_winners_2022) |>
+  group_by(loser_name) |>
+  rename(name = loser_name) |>
+  summarise(matches_lost = n())
+
+atp_matches_2022_new_top20_winlose <- atp_matches_2022_new_top20_win |> left_join(atp_matches_2022_new_top20_lose)
+
 ggplot() + 
-  geom_bar(
-    data=atp_matches_2022_new_months, 
-    aes(x=month, weight=matches_won)) + 
-  scale_y_continuous(labels=comma) + 
-  labs(
-    title="Rafael Nadal wins most matches in 2022 during Australian Open", 
-    x="Month", 
-    y="# of Matches Won") + 
-  theme_light()
+  geom_dumbbell(
+    data=atp_matches_2022_new_top20_winlose, 
+    aes(y=reorder(name, matches_won), x=matches_won, xend=matches_lost),
+    linewidth = 1,
+    size=1,
+    color = "grey",
+    colour_x = "green",
+    colour_xend = "red") + 
+  theme_minimal() + 
+  labs(title="Alcaraz has largest win-loss gap in 2022", subtitle="Stefanos Tsitsipas had the highest overall match wins in 2022, but Carlos Alcaraz had the \nhighest largest difference between match wins and losses during the same year \n(green = matches won, blue = matches lost).", caption="Source: ATP | By Mitchell Hang")  + theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    axis.title = element_text(size = 8), 
+    plot.subtitle = element_text(size=10), 
+    panel.grid.minor = element_blank()
+    )
 ```
-
+Here I am creating a dumbbell chart showing the overall match wins and losses for the Top 20 male Grand Slam winners in 2023. Carlos Alcaraz, who was third in the 2022 chart, is now at the top of the 2023 chart, implying that he is a top performer who has improved over the past year in his match wins. Novak Djokovic was the top Grand Slam winner in 2023, and he is also climbing up the chart, as he was near the middle of the ranking from last year. Like in 2022, there was only one player who had more losses than wins, and this time it's Ben Shelton.
 
 ```{r}
-atp_matches_2023_new_months <- atp_matches_2023_new |>
-  filter(winner_name == "Novak Djokovic") |>
-  mutate(month = month(tourney_date, label=TRUE)) |>
-  select(month) |>
-  group_by(month) |>
-  summarise(matches_won = n()) |>
-  arrange(desc(matches_won))
+atp_matches_2023_new_top20_win <- atp_matches_2023_new |>
+  filter(winner_name %in% male_winners_2023) |>
+  group_by(winner_name) |>
+  rename(name = winner_name) |>
+  summarise(matches_won = n())
 
-atp_matches_2023_new_months
-```
+atp_matches_2023_new_top20_lose <- atp_matches_2023_new |>
+  filter(loser_name %in% male_winners_2023) |>
+  group_by(loser_name) |>
+  rename(name = loser_name) |>
+  summarise(matches_lost = n())
 
-```{r}
+atp_matches_2023_new_top20_winlose <- atp_matches_2023_new_top20_win |> left_join(atp_matches_2023_new_top20_lose)
+
 ggplot() + 
-  geom_bar(
-    data=atp_matches_2023_new_months, 
-    aes(x=month, weight=matches_won)) + 
-  scale_y_continuous(labels=comma) + 
-  labs(
-    title="Novak Djokovic wins most matches in 2022 during Australian Open and U.S. Open", 
-    x="Month", 
-    y="# of Matches Won") + 
-  theme_light()
+  geom_dumbbell(
+    data=atp_matches_2023_new_top20_winlose, 
+    aes(y=reorder(name, matches_won), x=matches_won, xend=matches_lost),
+    linewidth = 1,
+    size=1,
+    color = "grey",
+    colour_x = "green",
+    colour_xend = "red") + 
+  theme_minimal() + 
+  labs(title="Alcaraz's win-loss gap grows larger in 2023", subtitle="Carlos Alcaraz now takes the title of having the highest number of match wins in 2023 \nas his win-loss gap grows larger, while other players such as 2023 Grand Slam top winner \nNovak Djokovic is climbing up the rankings (green = matches won, red = matches lost).", caption="Source: ATP | By Mitchell Hang")  + theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    axis.title = element_text(size = 8), 
+    plot.subtitle = element_text(size=10), 
+    panel.grid.minor = element_blank()
+    )
 ```
-
+Here I am creating a dumbbell chart showing the overall match wins and losses for the Top 20 female Grand Slam winners in 2022. It's clear to see that Iga Swiatek has dominated much of the competition in the WTA during that year, as she not only has the highest number of match wins but also the largest difference between the number of match wins and losses. Despite it looking like that Swiatek has the fewest match losses out of the top 20, it's actually Ashleigh Barty which has the fewest losses at 0, meaning that she won every single one of her matches she played during that year.
 
 ```{r}
-wta_matches_2022_new_months <- wta_matches_2022_new |>
-  filter(winner_name == "Iga Swiatek") |>
-  mutate(month = month(tourney_date, label=TRUE)) |>
-  select(month) |>
-  group_by(month) |>
-  summarise(matches_won = n()) |>
-  arrange(desc(matches_won))
+wta_matches_2022_new_top20_win <- wta_matches_2022_new |>
+  filter(winner_name %in% female_winners_2022) |>
+  group_by(winner_name) |>
+  rename(name = winner_name) |>
+  summarise(matches_won = n())
 
-wta_matches_2022_new_months
-```
-```{r}
+wta_matches_2022_new_top20_lose <- wta_matches_2022_new |>
+  filter(loser_name %in% female_winners_2022) |>
+  group_by(loser_name) |>
+  rename(name = loser_name) |>
+  summarise(matches_lost = n())
+
+wta_matches_2022_new_top20_winlose <- wta_matches_2022_new_top20_win |> left_join(wta_matches_2022_new_top20_lose) |> replace(is.na(wta_matches_2022_new_top20_winlose), 0)
+
 ggplot() + 
-  geom_bar(
-    data=wta_matches_2022_new_months, 
-    aes(x=month, weight=matches_won)) + 
-  scale_y_continuous(labels=comma) + 
-  labs(
-    title="Iga Swiatek wins most matches in 2022 during French Open, BNP Paribas & Miami", 
-    x="Month", 
-    y="# of Matches Won") + 
-  theme_light()
+  geom_dumbbell(
+    data=wta_matches_2022_new_top20_winlose, 
+    aes(y=reorder(name, matches_won), x=matches_won, xend=matches_lost),
+    linewidth = 1,
+    size=1,
+    color = "grey",
+    colour_x = "green",
+    colour_xend = "red") + 
+  theme_minimal() + 
+  labs(title="Swiatek has largest win-loss gap in 2022", subtitle="Iga Swiatek has not only the highest number of match wins in 2022, but also the largest \ndifference between match wins and losses during that same year (green = matches won, \nred = matches lost).", caption="Source: WTA | By Mitchell Hang")  + theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    axis.title = element_text(size = 8), 
+    plot.subtitle = element_text(size=10), 
+    panel.grid.minor = element_blank()
+    )
 ```
+Here I am creating a dumbbell chart showing the overall match wins and losses for the Top 20 female Grand Slam winners in 2023. Like in 2022, Iga Swiatek's gap between match wins and losses is relatively large, even though the numbers for both are slightly smaller for this year. The 2023 top Grand Slam winner, Aryna Sabalenka, is right below Swiatek on the chart, as she has a smaller number of match wins but the same number of match losses as Swiatek. This time, there was one player who had more losses than wins, and that is Bernada Pera, but even she doesn't have the lowest number of match wins, as that belongs to Elina Svitolina, who also has the lowest number of match losses.
 
 ```{r}
-wta_matches_2023_new_months <- wta_matches_2023_new |>
-  filter(winner_name == "Aryna Sabalenka") |>
-  mutate(month = month(tourney_date, label=TRUE)) |>
-  select(month) |>
-  group_by(month) |>
-  summarise(matches_won = n()) |>
-  arrange(desc(matches_won))
+wta_matches_2023_new_top20_win <- wta_matches_2023_new |>
+  filter(winner_name %in% female_winners_2023) |>
+  group_by(winner_name) |>
+  rename(name = winner_name) |>
+  summarise(matches_won = n())
 
-wta_matches_2023_new_months
-```
+wta_matches_2023_new_top20_lose <- wta_matches_2023_new |>
+  filter(loser_name %in% female_winners_2023) |>
+  group_by(loser_name) |>
+  rename(name = loser_name) |>
+  summarise(matches_lost = n())
 
-```{r}
+wta_matches_2023_new_top20_winlose <- wta_matches_2023_new_top20_win |> left_join(wta_matches_2023_new_top20_lose)
+
 ggplot() + 
-  geom_bar(
-    data=atp_matches_2023_new_months, 
-    aes(x=month, weight=matches_won)) + 
-  scale_y_continuous(labels=comma) + 
-  labs(
-    title="Aryna Sabalenka wins most matches in 2023 during Australian Open", 
-    x="Month", 
-    y="# of Matches Won") + 
-  theme_light()
+  geom_dumbbell(
+    data=wta_matches_2023_new_top20_winlose, 
+    aes(y=reorder(name, matches_won), x=matches_won, xend=matches_lost),
+    linewidth = 1,
+    size=1,
+    color = "grey",
+    colour_x = "green",
+    colour_xend = "red") + 
+  theme_minimal() + 
+  labs(title="Swiatek's win-loss gap grows larger in 2023", subtitle="Despite the Kansas City chiefs having the highest number of expected points added (EPA) after eight weeks \nof in-season games, the Minnesota Vikings have the greatest overall increase in its EPA, with a 229% \nincrease from Week 3 to Week 8 (green = matches won, red = matches lost).", caption="Source: WTA | By Mitchell Hang")  + theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    axis.title = element_text(size = 8), 
+    plot.subtitle = element_text(size=10), 
+    panel.grid.minor = element_blank()
+    )
 ```
-
-Taking the four names of the top players of the ATP and WTA in 2022 and 2023 in mind, I decided to see their distribution of match wins throughout the year in which they were dominant. Rafael Nadal, Novak Djokovic, and Aryna Sabalenka won their highest number of matches in January (plus August for Novak Djokovic), suggesting that most of these matches would have occured within the timeframe of the Australian Open (and also the U.S. Open for Novak Djokovic). Interestingly, Iga Swiatek had the highest number of matches won in March and May of 2022. We can consider that most of these matches take place in the French Open in May, and looking at the dataset it seems there were two other WTA tournaments in March that she participated in: the BNP Paribas Open in Indian Wells and Miami Open.
