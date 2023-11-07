@@ -266,7 +266,9 @@ wta_matches_2022_new_top20_lose <- wta_matches_2022_new |>
   rename(name = loser_name) |>
   summarise(matches_lost = n())
 
-wta_matches_2022_new_top20_winlose <- wta_matches_2022_new_top20_win |> left_join(wta_matches_2022_new_top20_lose) |> replace(is.na(wta_matches_2022_new_top20_winlose), 0)
+wta_matches_2022_new_top20_winlose <- wta_matches_2022_new_top20_win |> left_join(wta_matches_2022_new_top20_lose) 
+
+wta_matches_2022_new_top20_winlose <- wta_matches_2022_new_top20_winlose |> replace(is.na(wta_matches_2022_new_top20_winlose), 0)
 
 ggplot() + 
   geom_dumbbell(
@@ -313,7 +315,7 @@ ggplot() +
     colour_x = "green",
     colour_xend = "red") + 
   theme_minimal() + 
-  labs(title="Swiatek's win-loss gap grows larger in 2023", subtitle="Despite the Kansas City chiefs having the highest number of expected points added (EPA) after eight weeks \nof in-season games, the Minnesota Vikings have the greatest overall increase in its EPA, with a 229% \nincrease from Week 3 to Week 8 (green = matches won, red = matches lost).", caption="Source: WTA | By Mitchell Hang")  + theme_minimal() + 
+  labs(title="Swiatek's win-loss gap shrinks in 2023", subtitle="After Iga Swiatek had the largest difference between match wins and losses in 2022, she \ncontinuesto hold the highest number of match wins in 2023, but the win-loss gap has gotten \nslightly smaller (green = matches won, red = matches lost).", caption="Source: WTA | By Mitchell Hang")  + theme_minimal() + 
   theme(
     plot.title = element_text(size = 16, face = "bold"),
     axis.title = element_text(size = 8), 
@@ -321,3 +323,128 @@ ggplot() +
     panel.grid.minor = element_blank()
     )
 ```
+
+##### Z-scores
+
+```{r}
+atp_matches_2022_selected <- atp_matches_2022 |>
+  select(winner_name, w_ace, w_df, w_svpt, l_ace, l_df, l_svpt)
+
+atp_matches_2023_selected <- atp_matches_2023 |>
+  select(winner_name, w_ace, w_df, w_svpt, l_ace, l_df, l_svpt)
+
+wta_matches_2022_selected <- wta_matches_2022 |>
+  select(winner_name, w_ace, w_df, w_svpt, l_ace, l_df, l_svpt)
+
+wta_matches_2023_selected <- wta_matches_2023 |>
+  select(winner_name, w_ace, w_df, w_svpt, l_ace, l_df, l_svpt)
+```
+
+```{r}
+atp_matches_2022_totals <- atp_matches_2022_selected |> 
+  group_by(winner_name) |> 
+  na.omit() |>
+  summarise(
+    winnerMeanAce = mean(w_ace), 
+    winnerMeanDf = mean(w_df), 
+    winnerMeanSvpt = mean(w_svpt),
+    loserMeanAce = mean(l_ace), 
+    loserMeanDf = mean(l_df), 
+    loserMeanSvpt = mean(l_svpt)
+    ) 
+
+atp_matches_2022_zscore <- atp_matches_2022_totals |> 
+  mutate(
+    winnerMeanAceZscore = as.numeric(scale(winnerMeanAce, center = TRUE, scale = TRUE)),
+    winnerMeanDfZscore = as.numeric(scale(winnerMeanDf, center = TRUE, scale = TRUE)),
+    winnerMeanSvptZscore = as.numeric(scale(winnerMeanSvpt, center = TRUE, scale = TRUE)),
+    loserMeanAceZScore = as.numeric(scale(loserMeanAce, center = TRUE, scale = TRUE)) * -1,
+    loserMeanDfZScore = as.numeric(scale(loserMeanDf, center = TRUE, scale = TRUE)) * -1,
+    loserMeanSvptZScore = as.numeric(scale(loserMeanSvpt, center = TRUE, scale = TRUE)) * -1,
+    TotalZscore = winnerMeanAceZscore + winnerMeanDfZscore + winnerMeanSvptZscore + loserMeanAceZScore + loserMeanDfZScore + loserMeanSvptZScore
+  ) |> filter(winner_name %in% male_winners_2022) |> arrange(desc(TotalZscore))
+
+head(atp_matches_2022_zscore) 
+```
+
+```{r}
+atp_matches_2023_totals <- atp_matches_2023_selected |> 
+  group_by(winner_name) |> 
+  na.omit() |>
+  summarise(
+    winnerMeanAce = mean(w_ace), 
+    winnerMeanDf = mean(w_df), 
+    winnerMeanSvpt = mean(w_svpt),
+    loserMeanAce = mean(l_ace), 
+    loserMeanDf = mean(l_df), 
+    loserMeanSvpt = mean(l_svpt)
+    ) 
+
+atp_matches_2023_zscore <- atp_matches_2023_totals |> 
+  mutate(
+    winnerMeanAceZscore = as.numeric(scale(winnerMeanAce, center = TRUE, scale = TRUE)),
+    winnerMeanDfZscore = as.numeric(scale(winnerMeanDf, center = TRUE, scale = TRUE)),
+    winnerMeanSvptZscore = as.numeric(scale(winnerMeanSvpt, center = TRUE, scale = TRUE)),
+    loserMeanAceZScore = as.numeric(scale(loserMeanAce, center = TRUE, scale = TRUE)) * -1,
+    loserMeanDfZScore = as.numeric(scale(loserMeanDf, center = TRUE, scale = TRUE)) * -1,
+    loserMeanSvptZScore = as.numeric(scale(loserMeanSvpt, center = TRUE, scale = TRUE)) * -1,
+    TotalZscore = winnerMeanAceZscore + winnerMeanDfZscore + winnerMeanSvptZscore + loserMeanAceZScore + loserMeanDfZScore + loserMeanSvptZScore
+  ) |> filter(winner_name %in% male_winners_2023) |> arrange(desc(TotalZscore))
+
+head(atp_matches_2023_zscore) 
+```
+
+```{r}
+wta_matches_2022_totals <- wta_matches_2022_selected |> 
+  group_by(winner_name) |> 
+  na.omit() |>
+  summarise(
+    winnerMeanAce = mean(w_ace), 
+    winnerMeanDf = mean(w_df), 
+    winnerMeanSvpt = mean(w_svpt),
+    loserMeanAce = mean(l_ace), 
+    loserMeanDf = mean(l_df), 
+    loserMeanSvpt = mean(l_svpt)
+    ) 
+
+wta_matches_2022_zscore <- wta_matches_2022_totals |> 
+  mutate(
+    winnerMeanAceZscore = as.numeric(scale(winnerMeanAce, center = TRUE, scale = TRUE)),
+    winnerMeanDfZscore = as.numeric(scale(winnerMeanDf, center = TRUE, scale = TRUE)),
+    winnerMeanSvptZscore = as.numeric(scale(winnerMeanSvpt, center = TRUE, scale = TRUE)),
+    loserMeanAceZScore = as.numeric(scale(loserMeanAce, center = TRUE, scale = TRUE)) * -1,
+    loserMeanDfZScore = as.numeric(scale(loserMeanDf, center = TRUE, scale = TRUE)) * -1,
+    loserMeanSvptZScore = as.numeric(scale(loserMeanSvpt, center = TRUE, scale = TRUE)) * -1,
+    TotalZscore = winnerMeanAceZscore + winnerMeanDfZscore + winnerMeanSvptZscore + loserMeanAceZScore + loserMeanDfZScore + loserMeanSvptZScore
+  ) |> filter(winner_name %in% female_winners_2022) |> arrange(desc(TotalZscore))
+
+head(wta_matches_2022_zscore) 
+```
+
+```{r}
+wta_matches_2023_totals <- wta_matches_2023_selected |> 
+  group_by(winner_name) |> 
+  na.omit() |>
+  summarise(
+    winnerMeanAce = mean(w_ace), 
+    winnerMeanDf = mean(w_df), 
+    winnerMeanSvpt = mean(w_svpt),
+    loserMeanAce = mean(l_ace), 
+    loserMeanDf = mean(l_df), 
+    loserMeanSvpt = mean(l_svpt)
+    ) 
+
+wta_matches_2023_zscore <- wta_matches_2023_totals |> 
+  mutate(
+    winnerMeanAceZscore = as.numeric(scale(winnerMeanAce, center = TRUE, scale = TRUE)),
+    winnerMeanDfZscore = as.numeric(scale(winnerMeanDf, center = TRUE, scale = TRUE)),
+    winnerMeanSvptZscore = as.numeric(scale(winnerMeanSvpt, center = TRUE, scale = TRUE)),
+    loserMeanAceZScore = as.numeric(scale(loserMeanAce, center = TRUE, scale = TRUE)) * -1,
+    loserMeanDfZScore = as.numeric(scale(loserMeanDf, center = TRUE, scale = TRUE)) * -1,
+    loserMeanSvptZScore = as.numeric(scale(loserMeanSvpt, center = TRUE, scale = TRUE)) * -1,
+    TotalZscore = winnerMeanAceZscore + winnerMeanDfZscore + winnerMeanSvptZscore + loserMeanAceZScore + loserMeanDfZScore + loserMeanSvptZScore
+  ) |> filter(winner_name %in% female_winners_2023) |> arrange(desc(TotalZscore))
+
+head(wta_matches_2023_zscore) 
+```
+Here I attempted to calculate the Z-scores for the top 20 grand slam players of the ATP and WTA from 2022 and 2023. What really surprised me is that none of the four names from the top of the prior bar and dumbbell charts were found in the top of the Z-score rankings. For example, we have some unknown players like Alexander Zverev and Felix Auger Aliassime who appear to be performing better than more recognized players like Rafael Nadal and Novak Djokovic. However, looking at the chart of overall matches, Zverev only won a total of eight grand slam matches in 2022, whereas the rest of them are comprised of matches won in non-GS tournaments. It's possible that some athletes put more of their focus on tournaments outside of the Grand Slam as to improve their overall record in tennis matches, whereas those who focus solely on the Grand Slams often train for the fame and glory. Or it's possible that this is because of the number of overall matches they have competed in throughout the year, as any higher number of matches won/loss could drastically sway their performance one way or another.
