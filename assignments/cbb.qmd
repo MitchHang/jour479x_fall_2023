@@ -201,4 +201,85 @@ ggplot() +
   geom_line(data=average, aes(x=Date, y=mean_shooting), color="black") + 
   scale_y_continuous(limits = c(0, .70))
 ```
+##### Facet Wraps
 
+```{r}
+logs <- read_csv("https://dwillis.github.io/sports-data-files/logs23.csv")
+```
+
+```{r}
+big10 <- logs |> filter(Conference == "Big Ten MBB") |> filter(!is.na(TeamFGPCT))
+
+ggplot() + 
+  geom_line(data=big10, aes(x=Date, y=TeamFGPCT, group=Team)) + 
+  scale_y_continuous(limits = c(0, .7))
+```
+
+```{r}
+ggplot() + 
+  geom_line(data=big10, aes(x=Date, y=TeamFGPCT, group=Team)) + 
+  scale_y_continuous(limits = c(0, .7)) + 
+  facet_wrap(~Team)
+```
+
+```{r}
+big10 |> summarise(mean(TeamFGPCT))
+```
+
+```{r}
+ggplot() + 
+  geom_hline(yintercept=0.4487757, color="blue") + 
+  geom_line(data=big10, aes(x=Date, y=TeamFGPCT, group=Team)) + 
+  scale_y_continuous(limits = c(0, .7)) + 
+  facet_wrap(~Team)
+```
+
+```{r}
+ggplot() + 
+  geom_hline(yintercept=0.4487757, color="blue") + 
+  geom_line(data=big10, aes(x=Date, y=TeamFGPCT, group=Team)) + 
+  scale_y_continuous(limits = c(0, .7)) + 
+  facet_grid(Team ~ .)
+```
+
+```{r}
+ggplot() + 
+  geom_hline(yintercept=0.4487757, color="blue") + 
+  geom_line(data=big10, aes(x=Date, y=TeamFGPCT, group=Team)) + 
+  scale_y_continuous(limits = c(0, .7)) + 
+  facet_grid(. ~ Team)
+```
+
+```{r}
+ggplot() + 
+  geom_point(data=big10, aes(x=TeamFGPCT, y=OpponentFGPCT, color=W_L)) +
+  scale_y_continuous(limits = c(0, .7)) + 
+  scale_x_continuous(limits = c(0, .7)) + 
+  facet_wrap(~Team)
+```
+##### Early Season Analysis Exercise (11/9/23)
+
+```{r}
+data_2015_to_now <- read_csv("https://raw.githubusercontent.com/dwillis/dwillis.github.io/main/docs/sports-data-files/cbblogs1524.csv")
+```
+
+```{r}
+data_2015_to_now_filtered <- data_2015_to_now |>
+  filter(Team == "Maryland") |>
+  filter(Game <= 5)
+```
+
+Here, I filtered the data from 2015 to now by the games in which Maryland played. In this case, I consider the first five games to be early in the season, so I filtered by that as well. I also made a separate column showing whether the won their game (with a 1) or lost it (with a 0).
+
+```{r}
+ggplot() + 
+  geom_hline(yintercept=78, color="blue") +
+  geom_point(data=data_2015_to_now_filtered, aes(x=Game, y=TeamScore, group=Season)) + 
+  scale_y_continuous(limits = c(50, 100)) +
+  facet_wrap(~Season)
+```
+
+```{r}
+data_2015_to_now_filtered |> summarise(mean(TeamScore))
+```
+Here I created point graphs for the team's score throughout the first five games of several seasons, and then I calculated an average number of the score (78 points) to serve as a baseline. We can see that 2020-2021 was Maryland's best early-performing season based on the fact that four of the five points are above the baseline, suggesting that the team's performance was improved while they were imploring strategies during the pandemic. The season after (2021-2022) was the worst early-performing season since four of the five points are below the baseline. In 2023, we can see that the score of 68 from Tuesday is below the baseline, suggesting that Maryland is not off to a good start for the 2023-2024 season. 
