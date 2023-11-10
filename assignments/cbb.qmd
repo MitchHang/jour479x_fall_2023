@@ -283,3 +283,54 @@ ggplot() +
 data_2015_to_now_filtered |> summarise(mean(TeamScore))
 ```
 Here, with the help of facet wraps, I created point graphs for the team's score throughout the first five games of several seasons, and then I calculated an average number of the score (78 points) to serve as a baseline. We can see that 2020-2021 was Maryland's best early-performing season based on the fact that four of the five points are above the baseline, suggesting that the team's performance was improved while they were imploring strategies during the pandemic. The season after (2021-2022) was the worst early-performing season since four of the five points are below the baseline. In 2023, we can see that the score of 68 from Tuesday is below the baseline, suggesting that Maryland is not off to a good start for the 2023-2024 season. 
+
+#####
+
+```{r}
+library(rvest)
+```
+
+```{r}
+scoringoffenseurl <- "http://www.cfbstats.com/2022/leader/national/team/offense/split01/category09/sort01.html"
+
+scoringoffense <- scoringoffenseurl |>
+  read_html() |>
+  html_nodes(xpath = '//*[@id="content"]/div[2]/table') |>
+  html_table()
+
+scoringoffense <- scoringoffense[[1]]
+
+head(scoringoffense)
+```
+
+```{r}
+scoringoffenseurl21 <- "http://www.cfbstats.com/2021/leader/national/team/offense/split01/category09/sort01.html"
+
+scoringoffense21 <- scoringoffenseurl21 |>
+  read_html() |>
+  html_nodes(xpath = '//*[@id="content"]/div[2]/table') |>
+  html_table()
+
+scoringoffense21 <- scoringoffense21[[1]]
+
+scoringoffense22 <- scoringoffense |> rename(Rank = 1) |> mutate(YEAR = 2022)
+scoringoffense21 <- scoringoffense21 |> rename(Rank = 1) |> mutate(YEAR = 2021)
+
+combined <- bind_rows(scoringoffense22, scoringoffense21)
+
+head(combined)
+```
+
+```{r}
+url <- "https://www.sports-reference.com/cbb/seasons/2023-school-stats.html"
+
+stats <- url |>
+  read_html() |>
+  html_nodes(xpath = '//*[@id="basic_school_stats"]') |>
+  html_table(header=FALSE)
+
+stats <- stats[[1]] |> slice(-1) |> slice(-1)
+
+head(stats)
+```
+
