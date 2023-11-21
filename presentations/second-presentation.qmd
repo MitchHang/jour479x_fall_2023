@@ -1,0 +1,65 @@
+---
+title: "Second Presentation"
+author: "Mitchell Hang"
+date: '2023-11-20'
+format: 
+  html:
+    code-fold: true
+---
+
+The question(s) I am aiming to tackle for this second presentation is: "Is there a relationship between penalties and wins/losses, and what kinds of penalties can do more harm than good?
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+football_logs_2019 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs19.csv")
+football_logs_2020 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs20.csv")
+football_logs_2021 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs21.csv")
+football_logs_2022 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs22.csv")
+football_logs_2023 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs23.csv")
+```
+```{r}
+football_logs_2019 <- football_logs_2019 |>
+  add_column(Season = "2019-2020") |>
+  relocate(Season)
+
+football_logs_2020 <- football_logs_2020 |>
+  add_column(Season = "2020-2021") |>
+  relocate(Season)
+
+football_logs_2021 <- football_logs_2021 |>
+  add_column(Season = "2021-2022") |>
+  relocate(Season)
+
+football_logs_2022 <- football_logs_2022 |>
+  add_column(Season = "2022-2023") |>
+  relocate(Season)
+
+football_logs_2023 <- football_logs_2023 |>
+  add_column(Season = "2023-2024") |>
+  relocate(Season)
+```
+
+```{r}
+football_logs_2019_to_2020 <- football_logs_2019 |>
+  full_join(football_logs_2020)
+
+football_logs_2019_to_2021 <- football_logs_2019_to_2020 |>
+  full_join(football_logs_2021)
+
+football_logs_2019_to_2022 <- football_logs_2019_to_2021 |>
+  full_join(football_logs_2022)
+
+football_logs_2019_to_2023 <- football_logs_2019_to_2022 |>
+  full_join(football_logs_2023)
+```
+
+===== My Biggest Question/Problem (11/20) =====
+
+I was able to load my datasets from 2019 to 2023, as 2019 was the earliest I could go since anything before that would give me an error (i.e., the data doesn't exist). From there, I was able to mutate each dataset to add a column indicating which season it was for (e.g., 2019-2020, 2020-2021, etc.) before full_joining them one by one.
+
+What I'm considering doing next is separating the result column by the outcome (W/L) and the final score (and maybe separate that into their own separate columns), which I assume should be relatively easy. I am also considering grouping the games by team and/or season to see how many penalties, fumbles, and interceptions they accumulated, and compare each one of them with the likelihood of them winning. In addition, I'll have to look into whether the offense or defense accumulates more penalties in a game, based off checking the play-by-play data. These are just preliminary, as my final findings/concepts may change later on in this project.
+
+One concern that I have is not having datasets prior to 2019 being available. Is there a logistical reason behind this? How would tracking down other datasets be like? Would they be much easier to merge/join?
