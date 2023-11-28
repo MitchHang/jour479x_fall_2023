@@ -1,0 +1,24 @@
+```{r}
+library(tidyverse)
+library(hoopR)
+options(scipen=999)
+```
+
+```{r}
+lineups <- nba_teamdashlineups(team_id = 1610612758)[[2]]
+
+lineups <- lineups |> 
+  mutate(across(starts_with("GP"):ncol(lineups), as.numeric))
+```
+```{r}
+lineups |>
+  select(GROUP_NAME, GP, MIN, PLUS_MINUS) |>
+  arrange(desc(MIN))
+```
+```{r}
+lineups |>
+  filter(str_detect(GROUP_NAME, "Mitchell")) |>
+  select(GROUP_NAME, GP, MIN, PLUS_MINUS) |>
+  arrange(desc(PLUS_MINUS))
+```
+My main takeaway is that Davion Mitchell, point guard for the Sacramento Kings, has been doing subpar efforts for his team. When analyzing the different groups/formations in which he has played for the team, we can see that many of them have a plus-minus score no greater than 8 with a majority of them falling under 10 minutes of play time. The group in which he played the most games (8 games, with over 61 minutes played) -- with members Harrison Barnes, Domantas Sabonis, Kevin Huerter, and Keegan Murray -- resulted in them having a plus-minus score of -23, meaning that this formation for the team is at its heaviest disadvantage. It's unknown whether or not Mitchell has been putting in the effort and practice leading up to his coming games, but it's possible that Mitchell has put a curse on the team whenever he's available to perform, as the formations he is involved in barely resulted in any satisfactory performances, let alone do they last long.
