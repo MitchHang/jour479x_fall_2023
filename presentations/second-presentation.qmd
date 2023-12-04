@@ -63,3 +63,7 @@ I was able to load my datasets from 2019 to 2023, as 2019 was the earliest I cou
 What I'm considering doing next is separating the result column by the outcome (W/L) and the final score (and maybe separate that into their own separate columns), which I assume should be relatively easy. I am also considering grouping the games by team and/or season to see how many penalties, fumbles, and interceptions they accumulated, and compare each one of them with the likelihood of them winning. In addition, I'll have to look into whether the offense or defense accumulates more penalties in a game, based off checking the play-by-play data. These are just preliminary, as my final findings/concepts may change later on in this project.
 
 One concern that I have is not having datasets prior to 2019 being available. Is there a logistical reason behind this? How would tracking down other datasets be like? Would they be much easier to merge/join?
+
+===== Update (12/3) =====
+
+So far, I haven't had much time to work on this project over the past few days (long story short, poor time management and overall unsureness), but I am considering constructing a model (or two) that focuses on the Z-scores of a team based on their predicted likelihood of winning off their pentalties, fumbles and interceptions. I still have yet to find/access any datasets prior to 2019, so I'm hoping to be able to construct something out of datasets going as far back as 2013 (i.e., the last ten seasons), to see how certain teams have improved over the last decade.
