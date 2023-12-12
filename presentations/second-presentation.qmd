@@ -14,6 +14,12 @@ library(tidyverse)
 ```
 
 ```{r}
+football_logs_2013 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs13.csv")
+football_logs_2014 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs14.csv")
+football_logs_2015 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs15.csv")
+football_logs_2016 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs16.csv")
+football_logs_2017 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs17.csv")
+football_logs_2018 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs18.csv")
 football_logs_2019 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs19.csv")
 football_logs_2020 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs20.csv")
 football_logs_2021 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs21.csv")
@@ -21,6 +27,30 @@ football_logs_2022 <- read_csv("https://dwillis.github.io/sports-data-files/foot
 football_logs_2023 <- read_csv("https://dwillis.github.io/sports-data-files/footballlogs23.csv")
 ```
 ```{r}
+football_logs_2013 <- football_logs_2013 |>
+  add_column(Season = "2013-2014") |>
+  relocate(Season)
+
+football_logs_2014 <- football_logs_2014 |>
+  add_column(Season = "2014-2015") |>
+  relocate(Season)
+
+football_logs_2015 <- football_logs_2015 |>
+  add_column(Season = "2015-2016") |>
+  relocate(Season)
+
+football_logs_2016 <- football_logs_2016 |>
+  add_column(Season = "2016-2017") |>
+  relocate(Season)
+
+football_logs_2017 <- football_logs_2017 |>
+  add_column(Season = "2017-2018") |>
+  relocate(Season)
+
+football_logs_2018 <- football_logs_2018 |>
+  add_column(Season = "2018-2019") |>
+  relocate(Season)
+
 football_logs_2019 <- football_logs_2019 |>
   add_column(Season = "2019-2020") |>
   relocate(Season)
@@ -43,16 +73,34 @@ football_logs_2023 <- football_logs_2023 |>
 ```
 
 ```{r}
-football_logs_2019_to_2020 <- football_logs_2019 |>
+football_logs_2013_to_2014 <- football_logs_2013 |>
+  full_join(football_logs_2014)
+
+football_logs_2013_to_2015 <- football_logs_2013_to_2014 |>
+  full_join(football_logs_2015)
+
+football_logs_2013_to_2016 <- football_logs_2013_to_2015 |>
+  full_join(football_logs_2016)
+
+football_logs_2013_to_2017 <- football_logs_2013_to_2016 |>
+  full_join(football_logs_2017)
+
+football_logs_2013_to_2018 <- football_logs_2013_to_2017 |>
+  full_join(football_logs_2018)
+
+football_logs_2013_to_2019 <- football_logs_2013_to_2018 |>
+  full_join(football_logs_2019)
+
+football_logs_2013_to_2020 <- football_logs_2013_to_2019 |>
   full_join(football_logs_2020)
 
-football_logs_2019_to_2021 <- football_logs_2019_to_2020 |>
+football_logs_2013_to_2021 <- football_logs_2013_to_2020 |>
   full_join(football_logs_2021)
 
-football_logs_2019_to_2022 <- football_logs_2019_to_2021 |>
+football_logs_2013_to_2022 <- football_logs_2013_to_2021 |>
   full_join(football_logs_2022)
 
-football_logs_2019_to_2023 <- football_logs_2019_to_2022 |>
+football_logs_2013_to_2023 <- football_logs_2013_to_2022 |>
   full_join(football_logs_2023)
 ```
 
@@ -67,3 +115,10 @@ One concern that I have is not having datasets prior to 2019 being available. Is
 ===== Update (12/3) =====
 
 So far, I haven't had much time to work on this project over the past few days (long story short, poor time management and overall unsureness), but I am considering constructing a model (or two) that focuses on the Z-scores of a team based on their predicted likelihood of winning off their pentalties, fumbles and interceptions. I still have yet to find/access any datasets prior to 2019, so I'm hoping to be able to construct something out of datasets going as far back as 2013 (i.e., the last ten seasons), to see how certain teams have improved over the last decade.
+
+===== Update (12/10) =====
+
+```{r}
+football_logs_2013_to_2023
+```
+
