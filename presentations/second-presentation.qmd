@@ -11,6 +11,9 @@ The question(s) I am aiming to tackle for this second presentation is: "Is there
 
 ```{r}
 library(tidyverse)
+library(ggbeeswarm)
+library(ggrepel)
+set.seed(1234)
 ```
 
 ```{r}
@@ -114,11 +117,124 @@ One concern that I have is not having datasets prior to 2019 being available. Is
 
 ===== Update (12/3) =====
 
-So far, I haven't had much time to work on this project over the past few days (long story short, poor time management and overall unsureness), but I am considering constructing a model (or two) that focuses on the Z-scores of a team based on their predicted likelihood of winning off their pentalties, fumbles and interceptions. I still have yet to find/access any datasets prior to 2019, so I'm hoping to be able to construct something out of datasets going as far back as 2013 (i.e., the last ten seasons), to see how certain teams have improved over the last decade.
+So far, I haven't had much time to work on this project over the past few days (long story short, poor time management and overall unsureness), but I am considering constructing a model (or two) that focuses on the Z-scores of a team based on their predicted likelihood of winning off their penalties, fumbles and interceptions. I still have yet to find/access any datasets prior to 2019, so I'm hoping to be able to construct something out of datasets going as far back as 2013 (i.e., the last ten seasons), to see how certain teams have improved over the last decade.
 
 ===== Update (12/10) =====
 
 ```{r}
 football_logs_2013_to_2023
 ```
+
+```{r}
+football_quality <- football_logs_2013_to_2023 |>
+  select(Season, Conference, Team, Penalties, Fumbles, Interceptions, TotalTurnovers, DefPenalties, DefFumbles, DefInterceptions, DefTotalTurnovers)
+
+football_totals <- football_quality |> 
+  group_by(Season, Conference, Team) |> 
+  summarise(
+    PenaltiesAvg = mean(Penalties), 
+    FumblesAvg = mean(Fumbles),
+    InterceptionsAvg = mean(Interceptions),
+    TotalTurnoversAvg = mean(TotalTurnovers),
+    DefPenaltiesAvg = mean(DefPenalties), 
+    DefFumblesAvg = mean(DefFumbles),
+    DefInterceptionsAvg = mean(DefInterceptions),
+    DefTotalTurnoversAvg = mean(DefTotalTurnovers)
+    ) 
+
+football_Zscore <- football_totals |> 
+  mutate(
+    PenaltiesZscore = as.numeric(scale(PenaltiesAvg, center = TRUE, scale = TRUE)),
+    FumblesZscore = as.numeric(scale(FumblesAvg, center = TRUE, scale = TRUE)),
+    InterceptionsZscore = as.numeric(scale(InterceptionsAvg, center = TRUE, scale = TRUE)),
+    TotalTurnoversZscore = as.numeric(scale(TotalTurnoversAvg, center = TRUE, scale = TRUE)),
+    DefPenaltiesZscore = as.numeric(scale(DefPenaltiesAvg, center = TRUE, scale = TRUE)) * -1,
+    DefFumblesZscore = as.numeric(scale(DefFumblesAvg, center = TRUE, scale = TRUE)) * -1,
+    DefInterceptionsZscore = as.numeric(scale(DefInterceptionsAvg, center = TRUE, scale = TRUE)) * -1,
+    DefTotalTurnoversZscore = as.numeric(scale(DefTotalTurnoversAvg, center = TRUE, scale = TRUE)) * -1,
+    TotalZscore = PenaltiesZscore + FumblesZscore + InterceptionsZscore + TotalTurnoversZscore + DefPenaltiesZscore + DefFumblesZscore + DefInterceptionsZscore + DefTotalTurnoversZscore
+  )  
+
+football_Zscore |> arrange(Team, desc(TotalZscore))
+```
+
+```{r}
+football_Zscore |> arrange(desc(TotalZscore))
+```
+Here, we can see that Rice was known most for its penalties, fumbles, interceptions and total turnovers they accumulated during the 2017-2018 college football season. Maryland had a greater chance of accumulating them during the 2020-2021 season. On the other hand, it seems that the opponents of Boston College racked up more penalties, fumbles, interceptions and total turnovers during the 2018-2019 college football season. The two teams who were known for their middling (i.e., average) penalty, fumble, interception and total turnover rates are Marshall during the 2019-2020 season and West Virginia during the 2013-2014 season.
+
+Maryland's highest chance of having racked up penalties, fumbles, interceptions and total turnovers was in its 2020-2021 season (with it being similar to Florida State during the 2018-2019 season), and their lowest chance having been in their 2018-2019 season, so it's interesting to find a strong shift over a few years. However, these results only seem to certify teams throughout each season from 2013 to 2023, rather than a look at their cumulative games. 
+
+```{r}
+football_team_quality <- football_logs_2013_to_2023 |>
+  select(Conference, Team, Penalties, Fumbles, Interceptions, TotalTurnovers, DefPenalties, DefFumbles, DefInterceptions, DefTotalTurnovers)
+
+football_team_totals <- football_team_quality |> 
+  group_by(Conference, Team) |> 
+  summarise(
+    PenaltiesAvg = mean(Penalties), 
+    FumblesAvg = mean(Fumbles),
+    InterceptionsAvg = mean(Interceptions),
+    TotalTurnoversAvg = mean(TotalTurnovers),
+    DefPenaltiesAvg = mean(DefPenalties), 
+    DefFumblesAvg = mean(DefFumbles),
+    DefInterceptionsAvg = mean(DefInterceptions),
+    DefTotalTurnoversAvg = mean(DefTotalTurnovers)
+    ) 
+
+football_team_Zscore <- football_team_totals |> 
+  mutate(
+    PenaltiesZscore = as.numeric(scale(PenaltiesAvg, center = TRUE, scale = TRUE)),
+    FumblesZscore = as.numeric(scale(FumblesAvg, center = TRUE, scale = TRUE)),
+    InterceptionsZscore = as.numeric(scale(InterceptionsAvg, center = TRUE, scale = TRUE)),
+    TotalTurnoversZscore = as.numeric(scale(TotalTurnoversAvg, center = TRUE, scale = TRUE)),
+    DefPenaltiesZscore = as.numeric(scale(DefPenaltiesAvg, center = TRUE, scale = TRUE)) * -1,
+    DefFumblesZscore = as.numeric(scale(DefFumblesAvg, center = TRUE, scale = TRUE)) * -1,
+    DefInterceptionsZscore = as.numeric(scale(DefInterceptionsAvg, center = TRUE, scale = TRUE)) * -1,
+    DefTotalTurnoversZscore = as.numeric(scale(DefTotalTurnoversAvg, center = TRUE, scale = TRUE)) * -1,
+    TotalZscore = PenaltiesZscore + FumblesZscore + InterceptionsZscore + TotalTurnoversZscore + DefPenaltiesZscore + DefFumblesZscore + DefInterceptionsZscore + DefTotalTurnoversZscore
+  )  
+
+football_team_Zscore |> arrange(desc(TotalZscore))
+```
+Here, we can see that Bowling Green State was most known for having racked up penalties, fumbles, interceptions and total turnovers from the 2013 to the 2023 seasons, whereas Oregon was less known as such. Teams like Wisconsin and Ole Miss were known to have had middling (i.e., average) amounts of penalties, fumbles, interceptions and total turnovers throughout this time. I would assume there is some strategy for Oregon to avoid racking up more of these turnovers, as coaches such as Mario Cristobal and Dan Lanning have seemingly contributed to the teams' overall performance for several years. Meanwhile, Bowling Green State coach Scot Loeffler apparently doesn't have a strategy worked out for his team to avoid racking more total turnovers.
+
+```{r}
+ggplot() + 
+  geom_point(data=football_logs_2013_to_2023, aes(x=Penalties, y=PenaltyYds)) + 
+  geom_smooth(data=football_logs_2013_to_2023, aes(x=Penalties, y=PenaltyYds), method="lm") + 
+  theme_minimal() + 
+  labs(title="Uniform relationship between penalties and penalty yards", subtitle="There were two other instances in which pentalies were highest and penalty yards were hightest.", caption="Source: NCAA | By Mitchell Hang")  + theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    axis.title = element_text(size = 8), 
+    plot.subtitle = element_text(size=10), 
+    panel.grid.minor = element_blank()
+    )
+```
+```{r}
+fit <- lm(PenaltyYds ~ Penalties, data = football_logs_2013_to_2023)
+summary(fit)
+```
+Here, we can see the relationship between penalties and penalty yards is almost entirely uniform and most cerainly not due to chance. According to the complete logs from the 2013 to the 2023 seasons, the most penalty yards ever accumulated during a college football game was by Arkansas State Red Wolves in a match against the Western Kentucky Hilltoppers on November 30, 2013 (the Wolves lost 31-34), but only ten penalties had been accumulated. The most number of penalties ever accumulated was by the Miami (FL) Hurricanes in a match against the Duke Blue Devils on October 31, 2015 (the Hurricanes won 30-27). 194 penalty yards were accumulated by the Hurricanes during that game, and that amount is still relatively high. 
+
+```{r}
+ggplot() + geom_quasirandom(data=football_logs_2013_to_2023, aes(x=TotalTurnovers, y=Penalties), color="grey") + theme_minimal() + 
+  labs(title="Fewer penalties for higher turnovers", subtitle="As turnovers increase in college football after 5, the number of overall penalties shrinks.", caption="Source: NCAA | By Mitchell Hang")  + theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    axis.title = element_text(size = 8), 
+    plot.subtitle = element_text(size=10), 
+    panel.grid.minor = element_blank()
+    )
+```
+```{r}
+fit <- lm(TotalTurnovers ~ Penalties, data = football_logs_2013_to_2023)
+summary(fit)
+```
+From what this graph shows, the highest number of penalties occurred with just two total turnovers for a team. The distribution for penalties to total turnovers seems to be relatively even from 0 to 5 turnovers. There were fewer instances for a team to have gotten more penalties with starting with 6 turnovers, with the least occurring at 8 turnovers. Upon closer examination, this occurrence seems to be slightly less random than one might think, so there could be some strategy involved in which teams focus on racking up more turnovers to reduce the number of penalties inflicted upon them.
+
+=====  Conclusion =====
+
+After loading and analyzing all of the college football data from 2013 to 2023, I found that it was somewhat difficult to come to a concrete conclusion as to whether or not penalties, fumbles, interceptions and overall total turnoves do matter to a team's advantage due to the limited amount of time I had working on this project. One thing that could've been easier is if there was a complete datasheet for football logs from the 2013 to the 2023 seasons, rather than having each individual ones, so that everything would load quicker without additional merging/joining. However, from my initial results, I can conclude that the relationship between penalties and penalty yards accumulated is relatively uniform, and that Bowling Green State was known to have racked up more overall turnovers from the 2013 to the 2023 seasons.
 
