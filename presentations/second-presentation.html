@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Mitchell Hang">
+<meta name="dcterms.date" content="2023-11-20">
+
+<title>Second Presentation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="second-presentation_files/libs/clipboard/clipboard.min.js"></script>
+<script src="second-presentation_files/libs/quarto-html/quarto.js"></script>
+<script src="second-presentation_files/libs/quarto-html/popper.min.js"></script>
+<script src="second-presentation_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="second-presentation_files/libs/quarto-html/anchor.min.js"></script>
+<link href="second-presentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="second-presentation_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="second-presentation_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="second-presentation_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="second-presentation_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Second Presentation</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Mitchell Hang </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 20, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>The question(s) I am aiming to tackle for this second presentation is: “Is there a relationship between penalties and wins/losses, and what kinds of penalties can do more harm than good?</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyverse' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggplot2' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tibble' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'readr' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'purrr' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'dplyr' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'lubridate' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.3     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggbeeswarm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggbeeswarm' was built under R version 4.2.3</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggrepel' was built under R version 4.2.3</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>football_logs_2013 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dwillis.github.io/sports-data-files/footballlogs13.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1583 Columns: 54
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (8): HomeAway, Opponent, Result, TeamFull, TeamURL, Outcome, Team, Con...
+dbl  (45): Game, PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, ...
+date  (1): Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>football_logs_2014 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dwillis.github.io/sports-data-files/footballlogs14.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1628 Columns: 54
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (8): HomeAway, Opponent, Result, TeamFull, TeamURL, Outcome, Team, Con...
+dbl  (45): Game, PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, ...
+date  (1): Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>football_logs_2015 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dwillis.github.io/sports-data-files/footballlogs15.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1635 Columns: 54
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (8): HomeAway, Opponent, Result, TeamFull, TeamURL, Outcome, Team, Con...
+dbl  (45): Game, PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, ...
+date  (1): Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>football_logs_2016 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dwillis.github.io/sports-data-files/footballlogs16.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1633 Columns: 54
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (8): HomeAway, Opponent, Result, TeamFull, TeamURL, Outcome, Team, Con...
+dbl  (45): Game, PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, ...
+date  (1): Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>football_logs_2017 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dwillis.github.io/sports-data-files/footballlogs17.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1650 Columns: 54
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (8): HomeAway, Opponent, Result, TeamFull, TeamURL, Outcome, Team, Con...
+dbl  (45): Game, PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, ...
+date  (1): Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>football_logs_2018 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dwillis.github.io/sports-data-files/footballlogs18.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1656 Columns: 54
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (8): HomeAway, Opponent, Result, TeamFull, TeamURL, Outcome, Team, Con...
+dbl  (45): Game, PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, ...
+date  (1): Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>football_logs_2019 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dwillis.github.io/sports-data-files/footballlogs19.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1662 Columns: 54
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (8): HomeAway, Opponent, Result, TeamFull, TeamURL, Outcome, Team, Con...
+dbl  (45): Game, PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, ...
+date  (1): Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>football_logs_2020 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dwillis.github.io/sports-data-files/footballlogs20.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1100 Columns: 54
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (8): HomeAway, Opponent, Result, TeamFull, TeamURL, Outcome, Team, Con...
+dbl  (45): Game, PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, ...
+date  (1): Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>football_logs_2021 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dwillis.github.io/sports-data-files/footballlogs21.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1655 Columns: 54
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (8): HomeAway, Opponent, Result, TeamFull, TeamURL, Outcome, Team, Con...
+dbl  (45): Game, PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, ...
+date  (1): Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>football_logs_2022 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dwillis.github.io/sports-data-files/footballlogs22.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1672 Columns: 54
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (8): HomeAway, Opponent, Result, TeamFull, TeamURL, Outcome, Team, Con...
+dbl  (45): Game, PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, ...
+date  (1): Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>football_logs_2023 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dwillis.github.io/sports-data-files/footballlogs23.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1596 Columns: 54
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (8): HomeAway, Opponent, Result, TeamFull, TeamURL, Outcome, Team, Con...
+dbl  (45): Game, PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, ...
+date  (1): Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>football_logs_2013 <span class="ot">&lt;-</span> football_logs_2013 <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">Season =</span> <span class="st">"2013-2014"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(Season)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>football_logs_2014 <span class="ot">&lt;-</span> football_logs_2014 <span class="sc">|&gt;</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">Season =</span> <span class="st">"2014-2015"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(Season)</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>football_logs_2015 <span class="ot">&lt;-</span> football_logs_2015 <span class="sc">|&gt;</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">Season =</span> <span class="st">"2015-2016"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(Season)</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>football_logs_2016 <span class="ot">&lt;-</span> football_logs_2016 <span class="sc">|&gt;</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">Season =</span> <span class="st">"2016-2017"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(Season)</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>football_logs_2017 <span class="ot">&lt;-</span> football_logs_2017 <span class="sc">|&gt;</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">Season =</span> <span class="st">"2017-2018"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(Season)</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>football_logs_2018 <span class="ot">&lt;-</span> football_logs_2018 <span class="sc">|&gt;</span></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">Season =</span> <span class="st">"2018-2019"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(Season)</span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>football_logs_2019 <span class="ot">&lt;-</span> football_logs_2019 <span class="sc">|&gt;</span></span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">Season =</span> <span class="st">"2019-2020"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(Season)</span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>football_logs_2020 <span class="ot">&lt;-</span> football_logs_2020 <span class="sc">|&gt;</span></span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">Season =</span> <span class="st">"2020-2021"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(Season)</span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a>football_logs_2021 <span class="ot">&lt;-</span> football_logs_2021 <span class="sc">|&gt;</span></span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">Season =</span> <span class="st">"2021-2022"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(Season)</span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>football_logs_2022 <span class="ot">&lt;-</span> football_logs_2022 <span class="sc">|&gt;</span></span>
+<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">Season =</span> <span class="st">"2022-2023"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(Season)</span>
+<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a>football_logs_2023 <span class="ot">&lt;-</span> football_logs_2023 <span class="sc">|&gt;</span></span>
+<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">Season =</span> <span class="st">"2023-2024"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(Season)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>football_logs_2013_to_2014 <span class="ot">&lt;-</span> football_logs_2013 <span class="sc">|&gt;</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(football_logs_2014)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(Season, Game, Date, HomeAway, Opponent, Result,
+PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, RushingAtt,
+RushingYds, RushingAvg, RushingTD, OffensivePlays, OffensiveYards, OffenseAvg,
+FirstDownPass, FirstDownRush, FirstDownPen, FirstDownTotal, Penalties,
+PenaltyYds, Fumbles, Interceptions, TotalTurnovers, TeamFull, TeamURL, Outcome,
+TeamScore, OpponentScore, DefPassingCmp, DefPassingAtt, DefPassingPct,
+DefPassingYds, DefPassingTD, DefRushingAtt, DefRushingYds, DefRushingAvg,
+DefRushingTD, DefPlays, DefYards, DefAvg, DefFirstDownPass, DefFirstDownRush,
+DefFirstDownPen, DefFirstDownTotal, DefPenalties, DefPenaltyYds, DefFumbles,
+DefInterceptions, DefTotalTurnovers, Team, Conference)`</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>football_logs_2013_to_2015 <span class="ot">&lt;-</span> football_logs_2013_to_2014 <span class="sc">|&gt;</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(football_logs_2015)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(Season, Game, Date, HomeAway, Opponent, Result,
+PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, RushingAtt,
+RushingYds, RushingAvg, RushingTD, OffensivePlays, OffensiveYards, OffenseAvg,
+FirstDownPass, FirstDownRush, FirstDownPen, FirstDownTotal, Penalties,
+PenaltyYds, Fumbles, Interceptions, TotalTurnovers, TeamFull, TeamURL, Outcome,
+TeamScore, OpponentScore, DefPassingCmp, DefPassingAtt, DefPassingPct,
+DefPassingYds, DefPassingTD, DefRushingAtt, DefRushingYds, DefRushingAvg,
+DefRushingTD, DefPlays, DefYards, DefAvg, DefFirstDownPass, DefFirstDownRush,
+DefFirstDownPen, DefFirstDownTotal, DefPenalties, DefPenaltyYds, DefFumbles,
+DefInterceptions, DefTotalTurnovers, Team, Conference)`</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>football_logs_2013_to_2016 <span class="ot">&lt;-</span> football_logs_2013_to_2015 <span class="sc">|&gt;</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(football_logs_2016)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(Season, Game, Date, HomeAway, Opponent, Result,
+PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, RushingAtt,
+RushingYds, RushingAvg, RushingTD, OffensivePlays, OffensiveYards, OffenseAvg,
+FirstDownPass, FirstDownRush, FirstDownPen, FirstDownTotal, Penalties,
+PenaltyYds, Fumbles, Interceptions, TotalTurnovers, TeamFull, TeamURL, Outcome,
+TeamScore, OpponentScore, DefPassingCmp, DefPassingAtt, DefPassingPct,
+DefPassingYds, DefPassingTD, DefRushingAtt, DefRushingYds, DefRushingAvg,
+DefRushingTD, DefPlays, DefYards, DefAvg, DefFirstDownPass, DefFirstDownRush,
+DefFirstDownPen, DefFirstDownTotal, DefPenalties, DefPenaltyYds, DefFumbles,
+DefInterceptions, DefTotalTurnovers, Team, Conference)`</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>football_logs_2013_to_2017 <span class="ot">&lt;-</span> football_logs_2013_to_2016 <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(football_logs_2017)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(Season, Game, Date, HomeAway, Opponent, Result,
+PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, RushingAtt,
+RushingYds, RushingAvg, RushingTD, OffensivePlays, OffensiveYards, OffenseAvg,
+FirstDownPass, FirstDownRush, FirstDownPen, FirstDownTotal, Penalties,
+PenaltyYds, Fumbles, Interceptions, TotalTurnovers, TeamFull, TeamURL, Outcome,
+TeamScore, OpponentScore, DefPassingCmp, DefPassingAtt, DefPassingPct,
+DefPassingYds, DefPassingTD, DefRushingAtt, DefRushingYds, DefRushingAvg,
+DefRushingTD, DefPlays, DefYards, DefAvg, DefFirstDownPass, DefFirstDownRush,
+DefFirstDownPen, DefFirstDownTotal, DefPenalties, DefPenaltyYds, DefFumbles,
+DefInterceptions, DefTotalTurnovers, Team, Conference)`</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>football_logs_2013_to_2018 <span class="ot">&lt;-</span> football_logs_2013_to_2017 <span class="sc">|&gt;</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(football_logs_2018)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(Season, Game, Date, HomeAway, Opponent, Result,
+PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, RushingAtt,
+RushingYds, RushingAvg, RushingTD, OffensivePlays, OffensiveYards, OffenseAvg,
+FirstDownPass, FirstDownRush, FirstDownPen, FirstDownTotal, Penalties,
+PenaltyYds, Fumbles, Interceptions, TotalTurnovers, TeamFull, TeamURL, Outcome,
+TeamScore, OpponentScore, DefPassingCmp, DefPassingAtt, DefPassingPct,
+DefPassingYds, DefPassingTD, DefRushingAtt, DefRushingYds, DefRushingAvg,
+DefRushingTD, DefPlays, DefYards, DefAvg, DefFirstDownPass, DefFirstDownRush,
+DefFirstDownPen, DefFirstDownTotal, DefPenalties, DefPenaltyYds, DefFumbles,
+DefInterceptions, DefTotalTurnovers, Team, Conference)`</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>football_logs_2013_to_2019 <span class="ot">&lt;-</span> football_logs_2013_to_2018 <span class="sc">|&gt;</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(football_logs_2019)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(Season, Game, Date, HomeAway, Opponent, Result,
+PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, RushingAtt,
+RushingYds, RushingAvg, RushingTD, OffensivePlays, OffensiveYards, OffenseAvg,
+FirstDownPass, FirstDownRush, FirstDownPen, FirstDownTotal, Penalties,
+PenaltyYds, Fumbles, Interceptions, TotalTurnovers, TeamFull, TeamURL, Outcome,
+TeamScore, OpponentScore, DefPassingCmp, DefPassingAtt, DefPassingPct,
+DefPassingYds, DefPassingTD, DefRushingAtt, DefRushingYds, DefRushingAvg,
+DefRushingTD, DefPlays, DefYards, DefAvg, DefFirstDownPass, DefFirstDownRush,
+DefFirstDownPen, DefFirstDownTotal, DefPenalties, DefPenaltyYds, DefFumbles,
+DefInterceptions, DefTotalTurnovers, Team, Conference)`</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>football_logs_2013_to_2020 <span class="ot">&lt;-</span> football_logs_2013_to_2019 <span class="sc">|&gt;</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(football_logs_2020)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(Season, Game, Date, HomeAway, Opponent, Result,
+PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, RushingAtt,
+RushingYds, RushingAvg, RushingTD, OffensivePlays, OffensiveYards, OffenseAvg,
+FirstDownPass, FirstDownRush, FirstDownPen, FirstDownTotal, Penalties,
+PenaltyYds, Fumbles, Interceptions, TotalTurnovers, TeamFull, TeamURL, Outcome,
+TeamScore, OpponentScore, DefPassingCmp, DefPassingAtt, DefPassingPct,
+DefPassingYds, DefPassingTD, DefRushingAtt, DefRushingYds, DefRushingAvg,
+DefRushingTD, DefPlays, DefYards, DefAvg, DefFirstDownPass, DefFirstDownRush,
+DefFirstDownPen, DefFirstDownTotal, DefPenalties, DefPenaltyYds, DefFumbles,
+DefInterceptions, DefTotalTurnovers, Team, Conference)`</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>football_logs_2013_to_2021 <span class="ot">&lt;-</span> football_logs_2013_to_2020 <span class="sc">|&gt;</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(football_logs_2021)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(Season, Game, Date, HomeAway, Opponent, Result,
+PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, RushingAtt,
+RushingYds, RushingAvg, RushingTD, OffensivePlays, OffensiveYards, OffenseAvg,
+FirstDownPass, FirstDownRush, FirstDownPen, FirstDownTotal, Penalties,
+PenaltyYds, Fumbles, Interceptions, TotalTurnovers, TeamFull, TeamURL, Outcome,
+TeamScore, OpponentScore, DefPassingCmp, DefPassingAtt, DefPassingPct,
+DefPassingYds, DefPassingTD, DefRushingAtt, DefRushingYds, DefRushingAvg,
+DefRushingTD, DefPlays, DefYards, DefAvg, DefFirstDownPass, DefFirstDownRush,
+DefFirstDownPen, DefFirstDownTotal, DefPenalties, DefPenaltyYds, DefFumbles,
+DefInterceptions, DefTotalTurnovers, Team, Conference)`</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>football_logs_2013_to_2022 <span class="ot">&lt;-</span> football_logs_2013_to_2021 <span class="sc">|&gt;</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(football_logs_2022)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(Season, Game, Date, HomeAway, Opponent, Result,
+PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, RushingAtt,
+RushingYds, RushingAvg, RushingTD, OffensivePlays, OffensiveYards, OffenseAvg,
+FirstDownPass, FirstDownRush, FirstDownPen, FirstDownTotal, Penalties,
+PenaltyYds, Fumbles, Interceptions, TotalTurnovers, TeamFull, TeamURL, Outcome,
+TeamScore, OpponentScore, DefPassingCmp, DefPassingAtt, DefPassingPct,
+DefPassingYds, DefPassingTD, DefRushingAtt, DefRushingYds, DefRushingAvg,
+DefRushingTD, DefPlays, DefYards, DefAvg, DefFirstDownPass, DefFirstDownRush,
+DefFirstDownPen, DefFirstDownTotal, DefPenalties, DefPenaltyYds, DefFumbles,
+DefInterceptions, DefTotalTurnovers, Team, Conference)`</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>football_logs_2013_to_2023 <span class="ot">&lt;-</span> football_logs_2013_to_2022 <span class="sc">|&gt;</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(football_logs_2023)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(Season, Game, Date, HomeAway, Opponent, Result,
+PassingCmp, PassingAtt, PassingPct, PassingYds, PassingTD, RushingAtt,
+RushingYds, RushingAvg, RushingTD, OffensivePlays, OffensiveYards, OffenseAvg,
+FirstDownPass, FirstDownRush, FirstDownPen, FirstDownTotal, Penalties,
+PenaltyYds, Fumbles, Interceptions, TotalTurnovers, TeamFull, TeamURL, Outcome,
+TeamScore, OpponentScore, DefPassingCmp, DefPassingAtt, DefPassingPct,
+DefPassingYds, DefPassingTD, DefRushingAtt, DefRushingYds, DefRushingAvg,
+DefRushingTD, DefPlays, DefYards, DefAvg, DefFirstDownPass, DefFirstDownRush,
+DefFirstDownPen, DefFirstDownTotal, DefPenalties, DefPenaltyYds, DefFumbles,
+DefInterceptions, DefTotalTurnovers, Team, Conference)`</code></pre>
+</div>
+</div>
+<p>===== My Biggest Question/Problem (11/20) =====</p>
+<p>I was able to load my datasets from 2019 to 2023, as 2019 was the earliest I could go since anything before that would give me an error (i.e., the data doesn’t exist). From there, I was able to mutate each dataset to add a column indicating which season it was for (e.g., 2019-2020, 2020-2021, etc.) before full_joining them one by one.</p>
+<p>What I’m considering doing next is separating the result column by the outcome (W/L) and the final score (and maybe separate that into their own separate columns), which I assume should be relatively easy. I am also considering grouping the games by team and/or season to see how many penalties, fumbles, and interceptions they accumulated, and compare each one of them with the likelihood of them winning. In addition, I’ll have to look into whether the offense or defense accumulates more penalties in a game, based off checking the play-by-play data. These are just preliminary, as my final findings/concepts may change later on in this project.</p>
+<p>One concern that I have is not having datasets prior to 2019 being available. Is there a logistical reason behind this? How would tracking down other datasets be like? Would they be much easier to merge/join?</p>
+<p>===== Update (12/3) =====</p>
+<p>So far, I haven’t had much time to work on this project over the past few days (long story short, poor time management and overall unsureness), but I am considering constructing a model (or two) that focuses on the Z-scores of a team based on their predicted likelihood of winning off their penalties, fumbles and interceptions. I still have yet to find/access any datasets prior to 2019, so I’m hoping to be able to construct something out of datasets going as far back as 2013 (i.e., the last ten seasons), to see how certain teams have improved over the last decade.</p>
+<p>===== Update (12/10) =====</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>football_logs_2013_to_2023</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 17,470 × 55
+   Season     Game Date       HomeAway Opponent     Result PassingCmp PassingAtt
+   &lt;chr&gt;     &lt;dbl&gt; &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;        &lt;chr&gt;       &lt;dbl&gt;      &lt;dbl&gt;
+ 1 2013-2014     1 2013-09-07 &lt;NA&gt;     San Jose St… W (34…         17         27
+ 2 2013-2014     2 2013-09-14 @        Army         W (34…         13         22
+ 3 2013-2014     3 2013-09-21 &lt;NA&gt;     Arizona Sta… W (42…         11         17
+ 4 2013-2014     4 2013-09-28 N        Washington … W (55…         17         28
+ 5 2013-2014     5 2013-10-05 &lt;NA&gt;     Washington   W (31…         12         20
+ 6 2013-2014     6 2013-10-12 @        Utah         L (21…         15         27
+ 7 2013-2014     7 2013-10-19 &lt;NA&gt;     UCLA         W (24…         18         25
+ 8 2013-2014     8 2013-10-26 @        Oregon State W (20…          8         18
+ 9 2013-2014     9 2013-11-07 &lt;NA&gt;     Oregon       W (26…          7         13
+10 2013-2014    10 2013-11-16 @        Southern Ca… L (17…         14         25
+# ℹ 17,460 more rows
+# ℹ 47 more variables: PassingPct &lt;dbl&gt;, PassingYds &lt;dbl&gt;, PassingTD &lt;dbl&gt;,
+#   RushingAtt &lt;dbl&gt;, RushingYds &lt;dbl&gt;, RushingAvg &lt;dbl&gt;, RushingTD &lt;dbl&gt;,
+#   OffensivePlays &lt;dbl&gt;, OffensiveYards &lt;dbl&gt;, OffenseAvg &lt;dbl&gt;,
+#   FirstDownPass &lt;dbl&gt;, FirstDownRush &lt;dbl&gt;, FirstDownPen &lt;dbl&gt;,
+#   FirstDownTotal &lt;dbl&gt;, Penalties &lt;dbl&gt;, PenaltyYds &lt;dbl&gt;, Fumbles &lt;dbl&gt;,
+#   Interceptions &lt;dbl&gt;, TotalTurnovers &lt;dbl&gt;, TeamFull &lt;chr&gt;, TeamURL &lt;chr&gt;, …</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>football_quality <span class="ot">&lt;-</span> football_logs_2013_to_2023 <span class="sc">|&gt;</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Season, Conference, Team, Penalties, Fumbles, Interceptions, TotalTurnovers, DefPenalties, DefFumbles, DefInterceptions, DefTotalTurnovers)</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>football_totals <span class="ot">&lt;-</span> football_quality <span class="sc">|&gt;</span> </span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Season, Conference, Team) <span class="sc">|&gt;</span> </span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">PenaltiesAvg =</span> <span class="fu">mean</span>(Penalties), </span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">FumblesAvg =</span> <span class="fu">mean</span>(Fumbles),</span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">InterceptionsAvg =</span> <span class="fu">mean</span>(Interceptions),</span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">TotalTurnoversAvg =</span> <span class="fu">mean</span>(TotalTurnovers),</span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefPenaltiesAvg =</span> <span class="fu">mean</span>(DefPenalties), </span>
+<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefFumblesAvg =</span> <span class="fu">mean</span>(DefFumbles),</span>
+<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefInterceptionsAvg =</span> <span class="fu">mean</span>(DefInterceptions),</span>
+<span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefTotalTurnoversAvg =</span> <span class="fu">mean</span>(DefTotalTurnovers)</span>
+<span id="cb60-15"><a href="#cb60-15" aria-hidden="true" tabindex="-1"></a>    ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'Season', 'Conference'. You can override
+using the `.groups` argument.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>football_Zscore <span class="ot">&lt;-</span> football_totals <span class="sc">|&gt;</span> </span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">PenaltiesZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(PenaltiesAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">FumblesZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(FumblesAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">InterceptionsZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(InterceptionsAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">TotalTurnoversZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(TotalTurnoversAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefPenaltiesZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(DefPenaltiesAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)) <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefFumblesZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(DefFumblesAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)) <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefInterceptionsZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(DefInterceptionsAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)) <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefTotalTurnoversZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(DefTotalTurnoversAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)) <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">TotalZscore =</span> PenaltiesZscore <span class="sc">+</span> FumblesZscore <span class="sc">+</span> InterceptionsZscore <span class="sc">+</span> TotalTurnoversZscore <span class="sc">+</span> DefPenaltiesZscore <span class="sc">+</span> DefFumblesZscore <span class="sc">+</span> DefInterceptionsZscore <span class="sc">+</span> DefTotalTurnoversZscore</span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a>  )  </span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a>football_Zscore <span class="sc">|&gt;</span> <span class="fu">arrange</span>(Team, <span class="fu">desc</span>(TotalZscore))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,420 × 20
+# Groups:   Season, Conference [121]
+   Season    Conference           Team  PenaltiesAvg FumblesAvg InterceptionsAvg
+   &lt;chr&gt;     &lt;chr&gt;                &lt;chr&gt;        &lt;dbl&gt;      &lt;dbl&gt;            &lt;dbl&gt;
+ 1 2017-2018 Mountain West Confe… Air …         4         1.17             0.5  
+ 2 2023-2024 Mountain West Confe… Air …         3.25      0.917            0.5  
+ 3 2013-2014 Mountain West Confe… Air …         4.42      0.75             0.333
+ 4 2015-2016 Mountain West Confe… Air …         3.79      0.786            0.857
+ 5 2018-2019 Mountain West Confe… Air …         4.5       0.833            0.417
+ 6 2019-2020 Mountain West Confe… Air …         3.23      0.923            0.462
+ 7 2020-2021 Mountain West Confe… Air …         4.5       0.833            0.5  
+ 8 2022-2023 Mountain West Confe… Air …         3.92      0.846            0.154
+ 9 2014-2015 Mountain West Confe… Air …         3.54      1                0.308
+10 2016-2017 Mountain West Confe… Air …         5.15      0.692            0.615
+# ℹ 1,410 more rows
+# ℹ 14 more variables: TotalTurnoversAvg &lt;dbl&gt;, DefPenaltiesAvg &lt;dbl&gt;,
+#   DefFumblesAvg &lt;dbl&gt;, DefInterceptionsAvg &lt;dbl&gt;, DefTotalTurnoversAvg &lt;dbl&gt;,
+#   PenaltiesZscore &lt;dbl&gt;, FumblesZscore &lt;dbl&gt;, InterceptionsZscore &lt;dbl&gt;,
+#   TotalTurnoversZscore &lt;dbl&gt;, DefPenaltiesZscore &lt;dbl&gt;,
+#   DefFumblesZscore &lt;dbl&gt;, DefInterceptionsZscore &lt;dbl&gt;,
+#   DefTotalTurnoversZscore &lt;dbl&gt;, TotalZscore &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>football_Zscore <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(TotalZscore))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,420 × 20
+# Groups:   Season, Conference [121]
+   Season    Conference           Team  PenaltiesAvg FumblesAvg InterceptionsAvg
+   &lt;chr&gt;     &lt;chr&gt;                &lt;chr&gt;        &lt;dbl&gt;      &lt;dbl&gt;            &lt;dbl&gt;
+ 1 2017-2018 Conference USA       Rice          4.42      1.08              1.33
+ 2 2022-2023 Big Ten Conference   Nort…         4.58      1.17              1.42
+ 3 2016-2017 Conference USA       Sout…         7.46      1.23              1.23
+ 4 2019-2020 Mid-American Confer… Akron         6.67      1                 1.17
+ 5 2021-2022 Pac-12 Conference    Ariz…         8.67      0.417             1.5 
+ 6 2013-2014 Big Ten Conference   Nebr…         5.92      1.23              1   
+ 7 2019-2020 Big Ten Conference   Rutg…         6.33      0.667             1.25
+ 8 2020-2021 Big Ten Conference   Mary…         8.8       0.4               1.8 
+ 9 2018-2019 Atlantic Coast Conf… Flor…         9.17      1.08              1.08
+10 2015-2016 American Athletic C… Cinc…         8         0.846             1.69
+# ℹ 1,410 more rows
+# ℹ 14 more variables: TotalTurnoversAvg &lt;dbl&gt;, DefPenaltiesAvg &lt;dbl&gt;,
+#   DefFumblesAvg &lt;dbl&gt;, DefInterceptionsAvg &lt;dbl&gt;, DefTotalTurnoversAvg &lt;dbl&gt;,
+#   PenaltiesZscore &lt;dbl&gt;, FumblesZscore &lt;dbl&gt;, InterceptionsZscore &lt;dbl&gt;,
+#   TotalTurnoversZscore &lt;dbl&gt;, DefPenaltiesZscore &lt;dbl&gt;,
+#   DefFumblesZscore &lt;dbl&gt;, DefInterceptionsZscore &lt;dbl&gt;,
+#   DefTotalTurnoversZscore &lt;dbl&gt;, TotalZscore &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>Here, we can see that Rice was known most for its penalties, fumbles, interceptions and total turnovers they accumulated during the 2017-2018 college football season. Maryland had a greater chance of accumulating them during the 2020-2021 season. On the other hand, it seems that the opponents of Boston College racked up more penalties, fumbles, interceptions and total turnovers during the 2018-2019 college football season. The two teams who were known for their middling (i.e., average) penalty, fumble, interception and total turnover rates are Marshall during the 2019-2020 season and West Virginia during the 2013-2014 season.</p>
+<p>Maryland’s highest chance of having racked up penalties, fumbles, interceptions and total turnovers was in its 2020-2021 season (with it being similar to Florida State during the 2018-2019 season), and their lowest chance having been in their 2018-2019 season, so it’s interesting to find a strong shift over a few years. However, these results only seem to certify teams throughout each season from 2013 to 2023, rather than a look at their cumulative games.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>football_team_quality <span class="ot">&lt;-</span> football_logs_2013_to_2023 <span class="sc">|&gt;</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Conference, Team, Penalties, Fumbles, Interceptions, TotalTurnovers, DefPenalties, DefFumbles, DefInterceptions, DefTotalTurnovers)</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>football_team_totals <span class="ot">&lt;-</span> football_team_quality <span class="sc">|&gt;</span> </span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Conference, Team) <span class="sc">|&gt;</span> </span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">PenaltiesAvg =</span> <span class="fu">mean</span>(Penalties), </span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">FumblesAvg =</span> <span class="fu">mean</span>(Fumbles),</span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">InterceptionsAvg =</span> <span class="fu">mean</span>(Interceptions),</span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">TotalTurnoversAvg =</span> <span class="fu">mean</span>(TotalTurnovers),</span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefPenaltiesAvg =</span> <span class="fu">mean</span>(DefPenalties), </span>
+<span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefFumblesAvg =</span> <span class="fu">mean</span>(DefFumbles),</span>
+<span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefInterceptionsAvg =</span> <span class="fu">mean</span>(DefInterceptions),</span>
+<span id="cb66-14"><a href="#cb66-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefTotalTurnoversAvg =</span> <span class="fu">mean</span>(DefTotalTurnovers)</span>
+<span id="cb66-15"><a href="#cb66-15" aria-hidden="true" tabindex="-1"></a>    ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'Conference'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>football_team_Zscore <span class="ot">&lt;-</span> football_team_totals <span class="sc">|&gt;</span> </span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">PenaltiesZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(PenaltiesAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">FumblesZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(FumblesAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">InterceptionsZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(InterceptionsAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">TotalTurnoversZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(TotalTurnoversAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefPenaltiesZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(DefPenaltiesAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)) <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefFumblesZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(DefFumblesAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)) <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefInterceptionsZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(DefInterceptionsAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)) <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">DefTotalTurnoversZscore =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(DefTotalTurnoversAvg, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>)) <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">TotalZscore =</span> PenaltiesZscore <span class="sc">+</span> FumblesZscore <span class="sc">+</span> InterceptionsZscore <span class="sc">+</span> TotalTurnoversZscore <span class="sc">+</span> DefPenaltiesZscore <span class="sc">+</span> DefFumblesZscore <span class="sc">+</span> DefInterceptionsZscore <span class="sc">+</span> DefTotalTurnoversZscore</span>
+<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a>  )  </span>
+<span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a>football_team_Zscore <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(TotalZscore))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 175 × 19
+# Groups:   Conference [12]
+   Conference   Team  PenaltiesAvg FumblesAvg InterceptionsAvg TotalTurnoversAvg
+   &lt;chr&gt;        &lt;chr&gt;        &lt;dbl&gt;      &lt;dbl&gt;            &lt;dbl&gt;             &lt;dbl&gt;
+ 1 Mid-America… Bowl…         7.24      0.621            1.07               1.69
+ 2 Big Ten Con… Nebr…         6         0.773            1.07               1.84
+ 3 Mountain We… Hawa…         6.67      0.787            1.12               1.91
+ 4 Conference … Sout…         6.55      0.945            1.2                2.15
+ 5 Sun Belt Co… West…         6.17      1.25             1.33               2.58
+ 6 Pacific-12 … UCLA          6.75      0.833            1                  1.83
+ 7 Mountain We… Colo…         6.65      0.685            0.923              1.61
+ 8 American At… Rutg…         6.46      0.615            1.69               2.31
+ 9 Conference … Tulsa         3.08      1.25             1.58               2.83
+10 Big 12 Conf… Cinc…         5.67      0.5              0.917              1.42
+# ℹ 165 more rows
+# ℹ 13 more variables: DefPenaltiesAvg &lt;dbl&gt;, DefFumblesAvg &lt;dbl&gt;,
+#   DefInterceptionsAvg &lt;dbl&gt;, DefTotalTurnoversAvg &lt;dbl&gt;,
+#   PenaltiesZscore &lt;dbl&gt;, FumblesZscore &lt;dbl&gt;, InterceptionsZscore &lt;dbl&gt;,
+#   TotalTurnoversZscore &lt;dbl&gt;, DefPenaltiesZscore &lt;dbl&gt;,
+#   DefFumblesZscore &lt;dbl&gt;, DefInterceptionsZscore &lt;dbl&gt;,
+#   DefTotalTurnoversZscore &lt;dbl&gt;, TotalZscore &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>Here, we can see that Bowling Green State was most known for having racked up penalties, fumbles, interceptions and total turnovers from the 2013 to the 2023 seasons, whereas Oregon was less known as such. Teams like Wisconsin and Ole Miss were known to have had middling (i.e., average) amounts of penalties, fumbles, interceptions and total turnovers throughout this time. I would assume there is some strategy for Oregon to avoid racking up more of these turnovers, as coaches such as Mario Cristobal and Dan Lanning have seemingly contributed to the teams’ overall performance for several years. Meanwhile, Bowling Green State coach Scot Loeffler apparently doesn’t have a strategy worked out for his team to avoid racking more total turnovers.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>football_logs_2013_to_2023, <span class="fu">aes</span>(<span class="at">x=</span>Penalties, <span class="at">y=</span>PenaltyYds)) <span class="sc">+</span> </span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">data=</span>football_logs_2013_to_2023, <span class="fu">aes</span>(<span class="at">x=</span>Penalties, <span class="at">y=</span>PenaltyYds), <span class="at">method=</span><span class="st">"lm"</span>) <span class="sc">+</span> </span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Uniform relationship between penalties and penalty yards"</span>, <span class="at">subtitle=</span><span class="st">"There were two other instances in which pentalies were highest and penalty yards were hightest."</span>, <span class="at">caption=</span><span class="st">"Source: NCAA | By Mitchell Hang"</span>)  <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>), </span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>), </span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="second-presentation_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(PenaltyYds <span class="sc">~</span> Penalties, <span class="at">data =</span> football_logs_2013_to_2023)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = PenaltyYds ~ Penalties, data = football_logs_2013_to_2023)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-52.548  -7.095  -0.575   6.932 144.932 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   0.6018     0.2088   2.882  0.00395 ** 
+Penalties     8.7466     0.0315 277.694  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 11.77 on 17468 degrees of freedom
+Multiple R-squared:  0.8153,    Adjusted R-squared:  0.8153 
+F-statistic: 7.711e+04 on 1 and 17468 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Here, we can see the relationship between penalties and penalty yards is almost entirely uniform and most cerainly not due to chance. According to the complete logs from the 2013 to the 2023 seasons, the most penalty yards ever accumulated during a college football game was by Arkansas State Red Wolves in a match against the Western Kentucky Hilltoppers on November 30, 2013 (the Wolves lost 31-34), but only ten penalties had been accumulated. The most number of penalties ever accumulated was by the Miami (FL) Hurricanes in a match against the Duke Blue Devils on October 31, 2015 (the Hurricanes won 30-27). 194 penalty yards were accumulated by the Hurricanes during that game, and that amount is still relatively high.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_quasirandom</span>(<span class="at">data=</span>football_logs_2013_to_2023, <span class="fu">aes</span>(<span class="at">x=</span>TotalTurnovers, <span class="at">y=</span>Penalties), <span class="at">color=</span><span class="st">"grey"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Fewer penalties for higher turnovers"</span>, <span class="at">subtitle=</span><span class="st">"As turnovers increase in college football after 5, the number of overall penalties shrinks."</span>, <span class="at">caption=</span><span class="st">"Source: NCAA | By Mitchell Hang"</span>)  <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>), </span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>), </span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="second-presentation_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(TotalTurnovers <span class="sc">~</span> Penalties, <span class="at">data =</span> football_logs_2013_to_2023)</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = TotalTurnovers ~ Penalties, data = football_logs_2013_to_2023)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.5927 -0.5365 -0.4874  0.5126  6.5267 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 1.459285   0.022546  64.724   &lt;2e-16 ***
+Penalties   0.007020   0.003401   2.064    0.039 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.271 on 17468 degrees of freedom
+Multiple R-squared:  0.0002438, Adjusted R-squared:  0.0001866 
+F-statistic:  4.26 on 1 and 17468 DF,  p-value: 0.03903</code></pre>
+</div>
+</div>
+<p>From what this graph shows, the highest number of penalties occurred with just two total turnovers for a team. The distribution for penalties to total turnovers seems to be relatively even from 0 to 5 turnovers. There were fewer instances for a team to have gotten more penalties with starting with 6 turnovers, with the least occurring at 8 turnovers. Upon closer examination, this occurrence seems to be slightly less random than one might think, so there could be some strategy involved in which teams focus on racking up more turnovers to reduce the number of penalties inflicted upon them.</p>
+<p>===== Conclusion =====</p>
+<p>After loading and analyzing all of the college football data from 2013 to 2023, I found that it was somewhat difficult to come to a concrete conclusion as to whether or not penalties, fumbles, interceptions and overall total turnoves do matter to a team’s advantage due to the limited amount of time I had working on this project. One thing that could’ve been easier is if there was a complete datasheet for football logs from the 2013 to the 2023 seasons, rather than having each individual ones, so that everything would load quicker without additional merging/joining. However, from my initial results, I can conclude that the relationship between penalties and penalty yards accumulated is relatively uniform, and that Bowling Green State was known to have racked up more overall turnovers from the 2013 to the 2023 seasons.</p>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
